@@ -24,8 +24,4 @@
     <ProjectReference Include="..\Pantrymo.Application\Pantrymo.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

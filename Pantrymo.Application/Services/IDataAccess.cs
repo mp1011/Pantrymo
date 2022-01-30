@@ -35,7 +35,7 @@ namespace Pantrymo.Application.Services
         {
             using var webClient = new HttpClient();
             return await webClient
-                    .GetJsonArrayAsync<T>($"https://localhost:7188/api/{typeof(T).Name}/getByDate/{from.ToUrlDateString()}");
+                    .GetJsonArrayAsync<T>($"https://localhost:7188/api/{typeof(T).Name}/GetByDate/{from.ToUrlDateString()}");
         }
 
         public async Task<Result<Site[]>> GetSites(DateTime from) => await GetRecords<Site>(from);

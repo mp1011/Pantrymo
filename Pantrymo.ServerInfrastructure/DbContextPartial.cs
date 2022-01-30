@@ -9,6 +9,8 @@ namespace Pantrymo.ServerInfrastructure
         IQueryable<Component> IDataContext.Components => Components;
         IQueryable<AlternateComponentName> IDataContext.AlternateComponentNames => AlternateComponentNames;
 
+        public virtual DbSet<FullHierarchy> FullHierarchy { get; set; }
+
         public async Task InsertAsync(Site[] records) => await Sites.AddRangeAsync(records);
         public async Task InsertAsync(Component[] records) => await Components.AddRangeAsync(records);
         public async Task InsertAsync(AlternateComponentName[] records) => await AlternateComponentNames.AddRangeAsync(records);
@@ -20,6 +22,9 @@ namespace Pantrymo.ServerInfrastructure
 
             modelBuilder.Entity<CuisineHierarchy>()
                 .Ignore(p => p.HierarchyId);
+
+            modelBuilder.Entity<FullHierarchy>()
+                .HasNoKey();
         }
     }
 }

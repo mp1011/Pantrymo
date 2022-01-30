@@ -4,6 +4,7 @@ using Pantrymo.Application.Models;
 using Pantrymo.Application.Queries;
 using Pantrymo.Application.Services;
 using Pantrymo.ClientInfrastructure;
+using Pantrymo.ClientInfrastructure.Services;
 
 namespace Pantrymo.Client
 {
@@ -21,14 +22,16 @@ namespace Pantrymo.Client
                 });
 
             builder.Services.AddBlazorWebView();
-            builder.Services.AddMediatR(typeof(GetRecipeQuery));
+            builder.Services.AddMediatR(typeof(GetCategoryTreeQuery));
             builder.Services.AddDbContext<IDataContext, PantryMoDBContext>();
             builder.Services.AddScoped<IDataAccess, RemoteDataAccessWithLocalFallback>();
             builder.Services.AddScoped<RemoteDataAccess>();
             builder.Services.AddScoped<LocalDataAccess>();
             builder.Services.AddScoped<DataSyncService>();
             builder.Services.AddSingleton<NetworkCheckService>();
-
+            builder.Services.AddScoped<IFullHierarchyLoader, RemoteFullHierarchyLoader>();
+            builder.Services.AddScoped<CategoryTreeBuilder>();
+            builder.Services.AddScoped<ILocalStorage, LocalStorage>();
             return builder.Build();
         }
     }

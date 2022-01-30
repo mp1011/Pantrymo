@@ -1,26 +1,25 @@
 ﻿@page "/"
 @using MediatR
 @using System
-@using Pantrymo.Application.Models
+@using Pantrymo.Application.Models.AppModels
 @using Pantrymo.Application.Queries
 
 @inject IMediator _mediator;
 
-<h1>Sites</h1>
+<h1>Categories</h1>
 <ol>
-    @foreach(var site in _sites)
+    @foreach(var subCat in _masterCategory.SubCategories)
     {
-        <li>@site.Name</li>
+        <li>@subCat.Value</li>
     }
 </ol>
 
 @code
 {
-    Site[] _sites = new Site[] { };
+    Category _masterCategory = new Category();
 
     protected override async Task OnInitializedAsync()
     {
-        _sites = await _mediator.Send(new GetByDateQuery<Site>(new DateTime(2022, 1, 1)));
-        _sites = _sites ?? new Site[] { };
+        _masterCategory = await _mediator.Send(new GetCategoryTreeQuery());
     }
 }

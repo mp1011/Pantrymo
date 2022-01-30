@@ -79,17 +79,21 @@ namespace Pantrymo.Application.Services
         private async Task<bool> TrySync()
         {
             bool anyFailed = false;
+            bool anySucceeded = false;
+
             foreach(var sync in _dataSync)
             {
                 if(sync.LastSuccessfulSync.TimeSince() > _localDataExpiration)
                 {
                     bool success = await sync.TrySync().DebugLogError();
+                    if (success)
+                        anySucceeded = true;
                     if (!success)
                         anyFailed = true;
                 }
             }
 
-            if (!anyFailed)
+            if (anySucceeded)
                 await _dataContext.SaveChangesAsync();
 
             return !anyFailed;

@@ -3,6 +3,7 @@ using Pantrymo.Application.Models;
 using Pantrymo.Application.Queries;
 using Pantrymo.Application.Services;
 using Pantrymo.ServerInfrastructure;
+using Pantrymo.ServerInfrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 
-builder.Services.AddMediatR(typeof(GetRecipeQuery));
+builder.Services.AddMediatR(typeof(GetCategoryTreeQuery));
 builder.Services.AddDbContext<IDataContext, PantryMoDBContext>();
 builder.Services.AddScoped<IDataAccess, LocalDataAccess>();
+builder.Services.AddScoped<CategoryTreeBuilder>();
+builder.Services.AddScoped<IFullHierarchyLoader, FullHierarchyLoader>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

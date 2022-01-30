@@ -8,7 +8,7 @@ namespace Pantrymo.Web.Controllers
     public class BaseDataAccessController<T> : ControllerBase
         where T:IWithLastModifiedDate
     {
-        private readonly IMediator _mediator;
+        protected readonly IMediator _mediator;
 
         public BaseDataAccessController(IMediator mediator)
         {
@@ -16,7 +16,7 @@ namespace Pantrymo.Web.Controllers
         }
 
         [HttpGet()]
-        [Route("getByDate/{dateFrom}")]
+        [Route("GetByDate/{dateFrom}")]
         public async Task<T[]> GetByDate(DateTime dateFrom) 
             => await _mediator.Send(new GetByDateQuery<T>(dateFrom));
     }
