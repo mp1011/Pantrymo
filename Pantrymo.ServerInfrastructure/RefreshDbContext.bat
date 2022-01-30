@@ -1,2 +1,2 @@
 dotnet ef dbcontext scaffold "Server=localhost;Database=PantryMoDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -o Models -f --context-dir . --namespace Pantrymo.Application.Models --context-namespace Pantrymo.ServerInfrastructure
-robocopy .\Models\ ..\Pantrymo.Application\Models\DataModels\ /mov /xf ComponentHierarchy.cs /xf CuisineHierarchy.cs
+robocopy .\Models\ ..\Pantrymo.Application\Models\DataModels\ /mov
