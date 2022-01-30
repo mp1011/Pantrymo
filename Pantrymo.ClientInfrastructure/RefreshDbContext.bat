@@ -1,0 +1,2 @@
+dotnet ef dbcontext scaffold "Data Source=C:\ProgramData\Pantrymo\PantryMoDB.db" Microsoft.EntityFrameworkCore.Sqlite -o Models -f --context-dir . --namespace Pantrymo.Application.Models --context-namespace Pantrymo.ClientInfrastructure
+del /q .\Models\* 

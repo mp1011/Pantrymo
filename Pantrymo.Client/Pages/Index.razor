@@ -1,0 +1,26 @@
+﻿@page "/"
+@using MediatR
+@using System
+@using Pantrymo.Application.Models
+@using Pantrymo.Application.Queries
+
+@inject IMediator _mediator;
+
+<h1>Sites</h1>
+<ol>
+    @foreach(var site in _sites)
+    {
+        <li>@site.Name</li>
+    }
+</ol>
+
+@code
+{
+    Site[] _sites = new Site[] { };
+
+    protected override async Task OnInitializedAsync()
+    {
+        _sites = await _mediator.Send(new GetByDateQuery<Site>(new DateTime(2022, 1, 1)));
+        _sites = _sites ?? new Site[] { };
+    }
+}
