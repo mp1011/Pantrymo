@@ -5,22 +5,19 @@ using Pantrymo.Application.Queries;
 
 namespace Pantrymo.Web.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SitesController : ControllerBase
+    public class BaseDataAccessController<T> : ControllerBase
+        where T:IWithLastModifiedDate
     {
         private readonly IMediator _mediator;
 
-        public SitesController(IMediator mediator)
+        public BaseDataAccessController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpGet()]
         [Route("getByDate/{dateFrom}")]
-        public async Task<Site[]> GetByDate(DateTime dateFrom)
-        {
-            return await _mediator.Send(new GetByDateQuery<Site>(dateFrom));
-        }
+        public async Task<T[]> GetByDate(DateTime dateFrom) 
+            => await _mediator.Send(new GetByDateQuery<T>(dateFrom));
     }
 }

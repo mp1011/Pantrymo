@@ -13,22 +13,13 @@ namespace Pantrymo.Application.Extensions
             return query.Max(p => p.LastModified);
         }
 
-        public static T[] GetByDate<T>(this IQueryable<T> query, DateTime dateFrom)
-            where T:IWithLastModifiedDate
-        {
-            return query
-                    .Where(p => p.LastModified > dateFrom)
-                    .OrderBy(p => p.LastModified)
-                    .ToArray();
-        }
-
-        public static async Task<T[]> GetByDateAsync<T>(this IQueryable<T> query, DateTime dateFrom)
+        public static async Task<Result<T[]>> GetByDateAsync<T>(this IQueryable<T> query, DateTime dateFrom)
           where T : IWithLastModifiedDate
         {
-            return await Task.Run(()=> query
+            return await Task.Run(() => query
                     .Where(p => p.LastModified > dateFrom)
                     .OrderBy(p => p.LastModified)
-                    .ToArray());
+                    .ToArray()).AsResult();
         }
     }
 }

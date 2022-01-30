@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Pantrymo.Application.Models;
 
 namespace Pantrymo.ServerInfrastructure
@@ -19,6 +22,7 @@ namespace Pantrymo.ServerInfrastructure
         public virtual DbSet<Component> Components { get; set; }
         public virtual DbSet<ComponentDiet> ComponentDiets { get; set; }
         public virtual DbSet<ComponentDietInfo> ComponentDietInfos { get; set; }
+        public virtual DbSet<ComponentHierarchy> ComponentHierarchies { get; set; }
         public virtual DbSet<ComponentNegative> ComponentNegatives { get; set; }
         public virtual DbSet<ComponentNegativeRelation> ComponentNegativeRelations { get; set; }
         public virtual DbSet<ComponentsByCuisine> ComponentsByCuisines { get; set; }
@@ -29,6 +33,7 @@ namespace Pantrymo.ServerInfrastructure
         public virtual DbSet<ComponentsWithAlternateName> ComponentsWithAlternateNames { get; set; }
         public virtual DbSet<ComponentsWithAncestor> ComponentsWithAncestors { get; set; }
         public virtual DbSet<Cuisine> Cuisines { get; set; }
+        public virtual DbSet<CuisineHierarchy> CuisineHierarchies { get; set; }
         public virtual DbSet<CuisineLookup> CuisineLookups { get; set; }
         public virtual DbSet<IngredientMeasurement> IngredientMeasurements { get; set; }
         public virtual DbSet<IngredientText> IngredientTexts { get; set; }
@@ -87,6 +92,8 @@ namespace Pantrymo.ServerInfrastructure
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.LastModified).HasColumnType("datetime");
+
                 entity.HasOne(d => d.Component)
                     .WithMany(p => p.AlternateComponentNames)
                     .HasForeignKey(d => d.ComponentId)
@@ -107,6 +114,8 @@ namespace Pantrymo.ServerInfrastructure
                 entity.HasIndex(e => e.Name, "IX_Components")
                     .IsUnique()
                     .HasFillFactor(80);
+
+                entity.Property(e => e.LastModified).HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -136,6 +145,19 @@ namespace Pantrymo.ServerInfrastructure
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ComponentHierarchy>(entity =>
+            {
+                entity.ToTable("ComponentHierarchy");
+
+                entity.Property(e => e.LastModified).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Component)
+                    .WithMany(p => p.ComponentHierarchies)
+                    .HasForeignKey(d => d.ComponentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ComponentHierarchy_Components");
             });
 
             modelBuilder.Entity<ComponentNegative>(entity =>
@@ -291,6 +313,17 @@ namespace Pantrymo.ServerInfrastructure
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<CuisineHierarchy>(entity =>
+            {
+                entity.ToTable("CuisineHierarchy");
+
+                entity.HasOne(d => d.Cuisine)
+                    .WithMany(p => p.CuisineHierarchies)
+                    .HasForeignKey(d => d.CuisineId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CusineHierarchy_Cuisines");
+            });
+
             modelBuilder.Entity<CuisineLookup>(entity =>
             {
                 entity.Property(e => e.Text)
@@ -331,10 +364,10 @@ namespace Pantrymo.ServerInfrastructure
                     .IsRequired()
                     .IsUnicode(false);
 
-                //entity.HasOne(d => d.Recipe)
-                //    .WithMany(p => p.IngredientTexts)
-                //    .HasForeignKey(d => d.RecipeId)
-                //    .HasConstraintName("FK_IngredientText_Recipe");
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.IngredientTexts)
+                    .HasForeignKey(d => d.RecipeId)
+                    .HasConstraintName("FK_IngredientText_Recipe");
             });
 
             modelBuilder.Entity<LatestRecipeAudit>(entity =>
@@ -376,11 +409,11 @@ namespace Pantrymo.ServerInfrastructure
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                //entity.HasOne(d => d.Site)
-                //    .WithMany(p => p.NavigationHints)
-                //    .HasForeignKey(d => d.SiteId)
-                //    .OnDelete(DeleteBehavior.ClientSetNull)
-                //    .HasConstraintName("FK_NavigationHint_Sites");
+                entity.HasOne(d => d.Site)
+                    .WithMany(p => p.NavigationHints)
+                    .HasForeignKey(d => d.SiteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_NavigationHint_Sites");
             });
 
             modelBuilder.Entity<ParsedCuisine>(entity =>
@@ -417,26 +450,26 @@ namespace Pantrymo.ServerInfrastructure
                     .IsRequired()
                     .IsUnicode(false);
 
-                //entity.HasOne(d => d.Author)
-                //    .WithMany(p => p.Recipes)
-                //    .HasForeignKey(d => d.AuthorId)
-                //    .HasConstraintName("FK_Recipe_Author");
+                entity.HasOne(d => d.Author)
+                    .WithMany(p => p.Recipes)
+                    .HasForeignKey(d => d.AuthorId)
+                    .HasConstraintName("FK_Recipe_Author");
 
-                //entity.HasOne(d => d.Site)
-                //    .WithMany(p => p.Recipes)
-                //    .HasForeignKey(d => d.SiteId)
-                //    .OnDelete(DeleteBehavior.ClientSetNull)
-                //    .HasConstraintName("FK_Recipe_Site");
+                entity.HasOne(d => d.Site)
+                    .WithMany(p => p.Recipes)
+                    .HasForeignKey(d => d.SiteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Recipe_Site");
             });
 
             modelBuilder.Entity<RecipeAudit>(entity =>
             {
                 entity.Property(e => e.AuditDate).HasColumnType("datetime");
 
-                //entity.HasOne(d => d.Recipe)
-                //    .WithMany(p => p.RecipeAudits)
-                //    .HasForeignKey(d => d.RecipeId)
-                //    .HasConstraintName("FK_RecipeAudits_Recipes");
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.RecipeAudits)
+                    .HasForeignKey(d => d.RecipeId)
+                    .HasConstraintName("FK_RecipeAudits_Recipes");
             });
 
             modelBuilder.Entity<RecipeCountBySite>(entity =>
@@ -630,11 +663,11 @@ namespace Pantrymo.ServerInfrastructure
                     .IsRequired()
                     .IsUnicode(false);
 
-                //entity.HasOne(d => d.Recipe)
-                //    .WithMany(p => p.RecipeSteps)
-                //    .HasForeignKey(d => d.RecipeId)
-                //    .OnDelete(DeleteBehavior.ClientSetNull)
-                //    .HasConstraintName("FK_RecipeSteps_Recipes");
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.RecipeSteps)
+                    .HasForeignKey(d => d.RecipeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RecipeSteps_Recipes");
             });
 
             modelBuilder.Entity<RecipeTrait>(entity =>
@@ -646,10 +679,10 @@ namespace Pantrymo.ServerInfrastructure
                 entity.HasIndex(e => e.TraitValueId, "IX_RecipeTraits_TraitValueId")
                     .HasFillFactor(80);
 
-                //entity.HasOne(d => d.Recipe)
-                //    .WithMany(p => p.RecipeTraits)
-                //    .HasForeignKey(d => d.RecipeId)
-                //    .HasConstraintName("FK_RecipeTraits_Recipes");
+                entity.HasOne(d => d.Recipe)
+                    .WithMany(p => p.RecipeTraits)
+                    .HasForeignKey(d => d.RecipeId)
+                    .HasConstraintName("FK_RecipeTraits_Recipes");
 
                 entity.HasOne(d => d.TraitValue)
                     .WithMany(p => p.RecipeTraits)
@@ -739,11 +772,11 @@ namespace Pantrymo.ServerInfrastructure
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                //entity.HasOne(d => d.Site)
-                //    .WithMany(p => p.ScraperHints)
-                //    .HasForeignKey(d => d.SiteId)
-                //    .OnDelete(DeleteBehavior.ClientSetNull)
-                //    .HasConstraintName("FK_ScraperHints_Sites");
+                entity.HasOne(d => d.Site)
+                    .WithMany(p => p.ScraperHints)
+                    .HasForeignKey(d => d.SiteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ScraperHints_Sites");
             });
 
             modelBuilder.Entity<SearchFilter>(entity =>

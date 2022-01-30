@@ -7,6 +7,7 @@ namespace Pantrymo.Application.Models
     {
         public Cuisine()
         {
+            CuisineHierarchies = new HashSet<CuisineHierarchy>();
         }
 
         public int Id { get; set; }
@@ -14,5 +15,6 @@ namespace Pantrymo.Application.Models
         public bool Generic { get; set; }
         public bool Esque { get; set; }
 
+        public virtual ICollection<CuisineHierarchy> CuisineHierarchies { get; set; }
     }
 }

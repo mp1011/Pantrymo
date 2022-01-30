@@ -4,9 +4,13 @@
     {
         IQueryable<Site> Sites { get; }
 
-        Site[] ExecuteSQLSites(FormattableString sql);
+        IQueryable<Component> Components { get; }
 
-        Task InsertAsync(Site[] sites);
+        IQueryable<AlternateComponentName> AlternateComponentNames { get; }
+
+        Task InsertAsync(Site[] records);
+        Task InsertAsync(Component[] records);
+        Task InsertAsync(AlternateComponentName[] records);
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
     }

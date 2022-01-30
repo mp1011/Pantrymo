@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddMediatR(typeof(GetRecipeQuery));
 builder.Services.AddDbContext<IDataContext, PantryMoDBContext>();
-builder.Services.AddScoped<ISiteAPI, LocalSiteAPI>();
+builder.Services.AddScoped<IDataAccess, LocalDataAccess>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

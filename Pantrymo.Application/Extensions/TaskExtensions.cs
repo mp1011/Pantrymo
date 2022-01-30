@@ -1,9 +1,33 @@
-﻿using System.Diagnostics;
+﻿using Pantrymo.Application.Models;
+using System.Diagnostics;
 
 namespace Pantrymo.Application.Extensions
 {
     public static class TaskExtensions
     {
+
+        public static Task<Result<T>> AsResult<T>(this Task<T> task)
+            where T:class,new()
+        {
+            return task.ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                    return Result.Failure(t.Result ?? new T());
+                else 
+                    return Result.Success(t.Result);
+            });
+        }
+
+        public static Task<Result<T[]>> AsResult<T>(this Task<T[]> task)
+        {
+            return task.ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                    return Result.Failure(t.Result ?? new T[] { });
+                else
+                    return Result.Success(t.Result);
+            });
+        }
 
         public static Task<T[]> NullToEmpty<T>(this Task<T[]?> task)
         {

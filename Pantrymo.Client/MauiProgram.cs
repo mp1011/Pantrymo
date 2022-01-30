@@ -23,9 +23,9 @@ namespace Pantrymo.Client
             builder.Services.AddBlazorWebView();
             builder.Services.AddMediatR(typeof(GetRecipeQuery));
             builder.Services.AddDbContext<IDataContext, PantryMoDBContext>();
-            builder.Services.AddScoped<ISiteAPI, WebSiteAPIWithFallback>();
-            builder.Services.AddScoped<WebSiteAPI>();
-            builder.Services.AddScoped<LocalSiteAPI>();
+            builder.Services.AddScoped<IDataAccess, RemoteDataAccessWithLocalFallback>();
+            builder.Services.AddScoped<RemoteDataAccess>();
+            builder.Services.AddScoped<LocalDataAccess>();
             builder.Services.AddScoped<DataSyncService>();
             builder.Services.AddSingleton<NetworkCheckService>();
 

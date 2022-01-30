@@ -2,20 +2,58 @@
 using Pantrymo.Application.Extensions;
 using Pantrymo.Application.Models;
 using Pantrymo.Application.Queries;
-using Pantrymo.Application.Services;
 
 namespace Pantrymo.Application.Handlers
 {
-    public class GetSitesByDateHandler : IRequestHandler<GetByDateQuery<Site>, Site[]>
+    public abstract class GetByDateHandler<T> : IRequestHandler<GetByDateQuery<T>, T[]>
+        where T : IWithLastModifiedDate
     {
-        private readonly ISiteAPI _siteAPI;
+        private readonly IDataContext _dataContext;
 
-        public GetSitesByDateHandler(ISiteAPI siteAPI)
+        public GetByDateHandler(IDataContext dataContext)
         {
-            _siteAPI = siteAPI;
+            _dataContext = dataContext;
         }
 
-        public async Task<Site[]> Handle(GetByDateQuery<Site> request, CancellationToken cancellationToken)
-            => await _siteAPI.GetSites(request.DateFrom).NullToEmpty(); 
+        public async Task<T[]> Handle(GetByDateQuery<T> request, CancellationToken cancellationToken)
+        {
+            var result = await GetByDate(_dataContext, request.DateFrom);
+            if (result.Success)
+                return result.Data;
+            else
+                return new T[] { };
+        }
+       
+        protected abstract Task<Result<T[]>> GetByDate(IDataContext dataContext, DateTime dateFrom);
+    }
+
+    public class GetSitesByDateHandler : GetByDateHandler<Site>
+    {
+        public GetSitesByDateHandler(IDataContext dataContext) : base(dataContext) { }
+
+        protected override async Task<Result<Site[]>> GetByDate(IDataContext dataContext, DateTime dateFrom)
+        {
+            return await dataContext.Sites.GetByDateAsync(dateFrom);
+        }
+    }
+
+    public class GetComponentsByDateHandler : GetByDateHandler<Component>
+    {
+        public GetComponentsByDateHandler(IDataContext dataContext) : base(dataContext) { }
+
+        protected override async Task<Result<Component[]>> GetByDate(IDataContext dataContext, DateTime dateFrom)
+        {
+            return await dataContext.Components.GetByDateAsync(dateFrom);
+        }
+    }
+
+    public class GetAlternateComponentNamesByDateHandler : GetByDateHandler<AlternateComponentName>
+    {
+        public GetAlternateComponentNamesByDateHandler(IDataContext dataContext) : base(dataContext) { }
+
+        protected override async Task<Result<AlternateComponentName[]>> GetByDate(IDataContext dataContext, DateTime dateFrom)
+        {
+            return await dataContext.AlternateComponentNames.GetByDateAsync(dateFrom);
+        }
     }
 }
