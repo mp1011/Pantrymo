@@ -29,7 +29,6 @@ namespace Pantrymo.ServerInfrastructure
         public virtual DbSet<ComponentsWithAlternateName> ComponentsWithAlternateNames { get; set; }
         public virtual DbSet<ComponentsWithAncestor> ComponentsWithAncestors { get; set; }
         public virtual DbSet<Cuisine> Cuisines { get; set; }
-        public virtual DbSet<CuisineHierarchy> CuisineHierarchies { get; set; }
         public virtual DbSet<CuisineLookup> CuisineLookups { get; set; }
         public virtual DbSet<IngredientMeasurement> IngredientMeasurements { get; set; }
         public virtual DbSet<IngredientText> IngredientTexts { get; set; }
@@ -290,17 +289,6 @@ namespace Pantrymo.ServerInfrastructure
                     .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<CuisineHierarchy>(entity =>
-            {
-                entity.ToTable("CuisineHierarchy");
-
-                entity.HasOne(d => d.Cuisine)
-                    .WithMany(p => p.CuisineHierarchies)
-                    .HasForeignKey(d => d.CuisineId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CusineHierarchy_Cuisines");
             });
 
             modelBuilder.Entity<CuisineLookup>(entity =>

@@ -16,11 +16,3 @@ CREATE TABLE AlternateComponentNames
 	ComponentId INTEGER NOT NULL,
 	LastModified TEXT NOT NULL
 );
-
-CREATE TABLE ComponentHierarchy
-(
-	Id INTEGER PRIMARY KEY,	
-	ComponentId INTEGER NOT NULL,
-	HierarchyId TEXT NOT NULL,	
-	LastModified TEXT NOT NULL
-);
