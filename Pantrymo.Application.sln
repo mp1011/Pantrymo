@@ -18,6 +18,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pantrymo.Client", "Pantrymo.Client\Pantrymo.Client.csproj", "{A0129A0A-F070-484D-9498-1484468D3E78}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{653C4D74-47BD-48B8-8035-737D13B92CD0}"
+	ProjectSection(SolutionItems) = preProject
+		UpdateDataModels.bat = UpdateDataModels.bat
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{3D953999-4CF7-4259-B542-5F58D744A54B}"
 EndProject
