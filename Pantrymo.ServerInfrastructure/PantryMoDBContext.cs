@@ -19,7 +19,6 @@ namespace Pantrymo.ServerInfrastructure
         public virtual DbSet<Component> Components { get; set; }
         public virtual DbSet<ComponentDiet> ComponentDiets { get; set; }
         public virtual DbSet<ComponentDietInfo> ComponentDietInfos { get; set; }
-        public virtual DbSet<ComponentHierarchy> ComponentHierarchies { get; set; }
         public virtual DbSet<ComponentNegative> ComponentNegatives { get; set; }
         public virtual DbSet<ComponentNegativeRelation> ComponentNegativeRelations { get; set; }
         public virtual DbSet<ComponentsByCuisine> ComponentsByCuisines { get; set; }
@@ -138,17 +137,6 @@ namespace Pantrymo.ServerInfrastructure
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<ComponentHierarchy>(entity =>
-            {
-                entity.ToTable("ComponentHierarchy");
-
-                entity.HasOne(d => d.Component)
-                    .WithMany(p => p.ComponentHierarchies)
-                    .HasForeignKey(d => d.ComponentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ComponentHierarchy_Components");
             });
 
             modelBuilder.Entity<ComponentNegative>(entity =>

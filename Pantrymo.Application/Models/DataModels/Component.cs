@@ -8,7 +8,6 @@ namespace Pantrymo.Application.Models
         public Component()
         {
             AlternateComponentNames = new HashSet<AlternateComponentName>();
-            ComponentHierarchies = new HashSet<ComponentHierarchy>();
             ComponentNegativeRelationComponents = new HashSet<ComponentNegativeRelation>();
             ComponentNegativeRelationNegativeComponents = new HashSet<ComponentNegativeRelation>();
             RecipeIngredients = new HashSet<RecipeIngredient>();
@@ -23,7 +22,6 @@ namespace Pantrymo.Application.Models
 
         public virtual ComponentDiet ComponentDiet { get; set; }
         public virtual ICollection<AlternateComponentName> AlternateComponentNames { get; set; }
-        public virtual ICollection<ComponentHierarchy> ComponentHierarchies { get; set; }
         public virtual ICollection<ComponentNegativeRelation> ComponentNegativeRelationComponents { get; set; }
         public virtual ICollection<ComponentNegativeRelation> ComponentNegativeRelationNegativeComponents { get; set; }
         public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
