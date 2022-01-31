@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Components.WebView.Maui;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProviders;
 using Pantrymo.Application.Models;
 using Pantrymo.Application.Queries;
 using Pantrymo.Application.Services;
@@ -21,6 +23,13 @@ namespace Pantrymo.Client
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
+            builder.Host.ConfigureAppConfiguration((app, config) =>
+            {
+                var path = new FileInfo(typeof(MauiApp).Assembly.Location).Directory;
+                config.AddJsonFile($@"{path}\appsettings.json", optional: false, false);
+            });
+            
+
             builder.Services.AddBlazorWebView();
             builder.Services.AddMediatR(typeof(GetCategoryTreeQuery));
             builder.Services.AddDbContext<IDataContext, PantryMoDBContext>();
@@ -32,6 +41,7 @@ namespace Pantrymo.Client
             builder.Services.AddScoped<IFullHierarchyLoader, RemoteFullHierarchyLoader>();
             builder.Services.AddScoped<CategoryTreeBuilder>();
             builder.Services.AddScoped<ILocalStorage, LocalStorage>();
+            builder.Services.AddSingleton<SettingsService>();
             return builder.Build();
         }
     }

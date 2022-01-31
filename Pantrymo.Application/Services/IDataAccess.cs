@@ -31,11 +31,18 @@ namespace Pantrymo.Application.Services
 
     public class RemoteDataAccess : IDataAccess
     {
+        private readonly SettingsService _settingsService;
+
+        public RemoteDataAccess(SettingsService settingsService)
+        {
+            _settingsService = settingsService;
+        }
+
         private async Task<Result<T[]>> GetRecords<T>(DateTime from)
         {
             using var webClient = new HttpClient();
             return await webClient
-                    .GetJsonArrayAsync<T>($"https://localhost:7188/api/{typeof(T).Name}/GetByDate/{from.ToUrlDateString()}");
+                    .GetJsonArrayAsync<T>($"{_settingsService.Host}/api/{typeof(T).Name}/GetByDate/{from.ToUrlDateString()}");
         }
 
         public async Task<Result<Site[]>> GetSites(DateTime from) => await GetRecords<Site>(from);

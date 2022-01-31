@@ -2,7 +2,6 @@
 
 namespace Pantrymo.Application.Models.AppModels
 {
-    [Serializable]
     public class Category
     {
         public bool IsValid => Name != null && !IsNonComponent;

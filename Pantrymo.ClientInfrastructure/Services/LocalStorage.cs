@@ -5,7 +5,12 @@ namespace Pantrymo.ClientInfrastructure.Services
 {
     public class LocalStorage : ILocalStorage
     {
-        private readonly DirectoryInfo _dataFolder = new DirectoryInfo(@"C:\ProgramData\Pantrymo");
+        private readonly DirectoryInfo _dataFolder;
+
+        public LocalStorage(SettingsService settingsService)
+        {
+            _dataFolder = new DirectoryInfo(settingsService.LocalDataFolder);
+        }
 
         private FileInfo GetLocalFile<T>()
         {

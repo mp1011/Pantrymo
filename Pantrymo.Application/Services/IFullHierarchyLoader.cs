@@ -11,11 +11,13 @@ namespace Pantrymo.Application.Services
     public class RemoteFullHierarchyLoader : IFullHierarchyLoader
     {
         private readonly ILocalStorage _localStorage;
-
-        public RemoteFullHierarchyLoader(ILocalStorage localStorage)
+        private readonly SettingsService _settingsService;
+public RemoteFullHierarchyLoader(ILocalStorage localStorage, SettingsService settingsService)
         {
             _localStorage = localStorage;
+            _settingsService = settingsService;
         }
+
         public async Task<FullHierarchy[]> GetFullHierarchy()
         {
             var result = await TryGetFullHierarchyRemote();
@@ -32,7 +34,7 @@ namespace Pantrymo.Application.Services
         {
             using var webClient = new HttpClient();
             var response = await webClient
-                    .GetJsonArrayAsync<FullHierarchy>($"https://localhost:7188/api/Component/FullHierarchy");
+                    .GetJsonArrayAsync<FullHierarchy>($"{_settingsService.Host}/api/Component/FullHierarchy");
 
             if (response.Success)
                 return response.Data;
