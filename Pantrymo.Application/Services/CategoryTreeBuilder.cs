@@ -9,11 +9,25 @@ namespace Pantrymo.Application.Services
     {
         private readonly IDataContext _dbContext;
         private readonly IFullHierarchyLoader _fullHierarchyLoader;
+        private readonly ICacheService _cache;
 
-        public CategoryTreeBuilder(IDataContext dbContext, IFullHierarchyLoader fullHierarchyLoader)
+        public CategoryTreeBuilder(IDataContext dbContext, IFullHierarchyLoader fullHierarchyLoader, ICacheService cache)
         {
             _dbContext = dbContext;
             _fullHierarchyLoader = fullHierarchyLoader;
+            _cache = cache;
+        }
+
+        public async Task<Category> GetOrBuildCategoryTree()
+        {
+            var categoryTree = await _cache.TryGet<Category>();
+            if(categoryTree == null)
+            {
+                categoryTree = await BuildCategoryTree();
+                await _cache.Add(categoryTree);
+            }
+
+            return categoryTree;
         }
 
         public async Task<Category> BuildCategoryTree()

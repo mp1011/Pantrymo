@@ -6,16 +6,20 @@ namespace Pantrymo.ServerInfrastructure
 {
     public partial class PantryMoDBContext : IDataContext
     {
-        private readonly SettingsService _settingsService;
+        private readonly ISettingsService _settingsService;
 
-        public PantryMoDBContext(SettingsService settingsService, DbContextOptions<PantryMoDBContext> options)
+        public PantryMoDBContext(ISettingsService settingsService, DbContextOptions<PantryMoDBContext> options)
           : base(options)
         {
             _settingsService = settingsService;
         }
 
         IQueryable<Site> IDataContext.Sites => Sites;
-        IQueryable<Component> IDataContext.Components => Components;
+        IQueryable<Component> IDataContext.Components => Components
+            .Include(c => c.AlternateComponentNames)
+            .Include(c => c.ComponentNegativeRelationComponents)
+                .ThenInclude(c => c.NegativeComponent);
+
         IQueryable<AlternateComponentName> IDataContext.AlternateComponentNames => AlternateComponentNames;
 
         public virtual DbSet<FullHierarchy> FullHierarchy { get; set; }

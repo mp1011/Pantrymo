@@ -1,25 +1,36 @@
 ﻿@page "/"
 @using MediatR
 @using System
+@using Pantrymo.Application.Features
 @using Pantrymo.Application.Models.AppModels
-@using Pantrymo.Application.Queries
+
 
 @inject IMediator _mediator;
 
-<h1>Categories</h1>
-<ol>
-    @foreach(var subCat in _masterCategory.SubCategories)
+<input id="IngredientTextInput" @bind="IngredientText" @bind:event="oninput" @onkeyup="IngredientText_OnKeyUp" />
+<ul>
+    @foreach(var ingredient in _ingredientSuggestions)
     {
-        <li>@subCat.Value</li>
+        <li>@ingredient</li>
     }
-</ol>
+</ul>
 
 @code
 {
-    Category _masterCategory = new Category();
 
-    protected override async Task OnInitializedAsync()
+    string IngredientText { get; set; }
+
+    private string[] _ingredientSuggestions = new string[] { };
+
+    public async void IngredientText_OnKeyUp(KeyboardEventArgs args)
     {
-        _masterCategory = await _mediator.Send(new GetCategoryTreeQuery());
+        await SuggestIngredients();
+    }
+
+    private async Task SuggestIngredients()
+    {
+        var suggestions = await _mediator.Send(new SuggestIngredientsFeature.Query(IngredientText,5));
+        _ingredientSuggestions = suggestions;
+        StateHasChanged();
     }
 }

@@ -6,17 +6,21 @@ namespace Pantrymo.ClientInfrastructure
 {
     public partial class PantryMoDBContext : IDataContext
     {
-        private readonly SettingsService _settingsService;
+        private readonly ISettingsService _settingsService;
 
-        public PantryMoDBContext(SettingsService settingsService, DbContextOptions<PantryMoDBContext> options)
+        public PantryMoDBContext(ISettingsService settingsService, DbContextOptions<PantryMoDBContext> options)
           : base(options)
         {
             _settingsService = settingsService; 
         }
 
-
         IQueryable<Site> IDataContext.Sites => Sites;
-        IQueryable<Component> IDataContext.Components => Components;
+        IQueryable<Component> IDataContext.Components => Components
+            .Include(c => c.AlternateComponentNames);
+            // add these lines once those tables are imported into sqlite
+            //.Include(c => c.ComponentNegativeRelationComponents)
+            //  .ThenInclude(c => c.NegativeComponent);
+
         IQueryable<AlternateComponentName> IDataContext.AlternateComponentNames => AlternateComponentNames;
 
         public async Task InsertAsync(Site[] records) => await Sites.AddRangeAsync(records);

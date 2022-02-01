@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Pantrymo.Application.Features;
 using Pantrymo.Application.Models;
-using Pantrymo.Application.Queries;
 
 namespace Pantrymo.Web.Controllers
 {
@@ -15,7 +15,7 @@ namespace Pantrymo.Web.Controllers
         [Route("FullHierarchy")]
         public async Task<FullHierarchy[]> GetFullHierarchy()
         {
-            return await _mediator.Send(new GetFullHierarchyQuery());
+            return await _mediator.Send(new FullHierarchyFeature.Query());
         }
     }
 }

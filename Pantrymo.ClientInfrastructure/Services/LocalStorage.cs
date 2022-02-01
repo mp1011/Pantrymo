@@ -7,7 +7,7 @@ namespace Pantrymo.ClientInfrastructure.Services
     {
         private readonly DirectoryInfo _dataFolder;
 
-        public LocalStorage(SettingsService settingsService)
+        public LocalStorage(ISettingsService settingsService)
         {
             _dataFolder = new DirectoryInfo(settingsService.LocalDataFolder);
         }

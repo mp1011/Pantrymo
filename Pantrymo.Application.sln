@@ -24,7 +24,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{3D953999-4CF7-4259-B542-5F58D744A54B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pantrymo.DbUp.Server", "Pantrymo.DbUp.Server\Pantrymo.DbUp.Server.csproj", "{35995AC8-CB3B-4AB6-BACD-642C7F9AE4DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pantrymo.DbUp.Server", "Pantrymo.DbUp.Server\Pantrymo.DbUp.Server.csproj", "{35995AC8-CB3B-4AB6-BACD-642C7F9AE4DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pantrymo.Tests", "Pantrymo.Tests\Pantrymo.Tests.csproj", "{AC3042BB-6D2E-463A-827D-93969AF5CADB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,10 @@ Global
 		{35995AC8-CB3B-4AB6-BACD-642C7F9AE4DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35995AC8-CB3B-4AB6-BACD-642C7F9AE4DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35995AC8-CB3B-4AB6-BACD-642C7F9AE4DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC3042BB-6D2E-463A-827D-93969AF5CADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC3042BB-6D2E-463A-827D-93969AF5CADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC3042BB-6D2E-463A-827D-93969AF5CADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC3042BB-6D2E-463A-827D-93969AF5CADB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +80,7 @@ Global
 		{E600C91E-C9C6-4280-AADA-A9241067C190} = {653C4D74-47BD-48B8-8035-737D13B92CD0}
 		{200F0AF2-29C8-4791-A4BA-A3460C392377} = {3D953999-4CF7-4259-B542-5F58D744A54B}
 		{35995AC8-CB3B-4AB6-BACD-642C7F9AE4DE} = {653C4D74-47BD-48B8-8035-737D13B92CD0}
+		{AC3042BB-6D2E-463A-827D-93969AF5CADB} = {3D953999-4CF7-4259-B542-5F58D744A54B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {202898D8-647E-48EA-894F-C0B417D54039}

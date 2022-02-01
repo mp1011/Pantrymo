@@ -31,9 +31,9 @@ namespace Pantrymo.Application.Services
 
     public class RemoteDataAccess : IDataAccess
     {
-        private readonly SettingsService _settingsService;
+        private readonly ISettingsService _settingsService;
 
-        public RemoteDataAccess(SettingsService settingsService)
+        public RemoteDataAccess(ISettingsService settingsService)
         {
             _settingsService = settingsService;
         }

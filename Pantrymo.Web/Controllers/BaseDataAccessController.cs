@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Pantrymo.Application.Features;
 using Pantrymo.Application.Models;
-using Pantrymo.Application.Queries;
 
 namespace Pantrymo.Web.Controllers
 {
@@ -18,6 +18,6 @@ namespace Pantrymo.Web.Controllers
         [HttpGet()]
         [Route("GetByDate/{dateFrom}")]
         public async Task<T[]> GetByDate(DateTime dateFrom) 
-            => await _mediator.Send(new GetByDateQuery<T>(dateFrom));
+            => await _mediator.Send(new GetByDateFeature.Query<T>(dateFrom));
     }
 }

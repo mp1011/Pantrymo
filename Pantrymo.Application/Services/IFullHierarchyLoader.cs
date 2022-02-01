@@ -11,8 +11,8 @@ namespace Pantrymo.Application.Services
     public class RemoteFullHierarchyLoader : IFullHierarchyLoader
     {
         private readonly ILocalStorage _localStorage;
-        private readonly SettingsService _settingsService;
-public RemoteFullHierarchyLoader(ILocalStorage localStorage, SettingsService settingsService)
+        private readonly ISettingsService _settingsService;
+public RemoteFullHierarchyLoader(ILocalStorage localStorage, ISettingsService settingsService)
         {
             _localStorage = localStorage;
             _settingsService = settingsService;
