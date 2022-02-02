@@ -1,7 +1,7 @@
-﻿using Pantrymo.Application.Models;
+﻿using Pantrymo.Domain.Models;
 using System.Collections.Concurrent;
 
-namespace Pantrymo.Application.Services
+namespace Pantrymo.Domain.Services
 {
     public interface ICacheService
     {

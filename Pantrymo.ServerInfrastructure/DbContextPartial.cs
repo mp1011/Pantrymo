@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pantrymo.Application.Models;
-using Pantrymo.Application.Services;
+using Pantrymo.Domain.Services;
 
 namespace Pantrymo.ServerInfrastructure
 {

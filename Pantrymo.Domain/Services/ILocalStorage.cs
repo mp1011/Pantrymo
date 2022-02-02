@@ -1,4 +1,4 @@
-﻿namespace Pantrymo.Application.Services
+﻿namespace Pantrymo.Domain.Services
 {
     public interface ILocalStorage
     {

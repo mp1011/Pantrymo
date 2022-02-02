@@ -2,6 +2,7 @@ using MediatR;
 using Pantrymo.Application.Features;
 using Pantrymo.Application.Models;
 using Pantrymo.Application.Services;
+using Pantrymo.Domain.Services;
 using Pantrymo.ServerInfrastructure;
 using Pantrymo.ServerInfrastructure.Services;
 
@@ -19,6 +20,7 @@ builder.Services.AddScoped<CategoryTreeBuilder>();
 builder.Services.AddScoped<IFullHierarchyLoader, FullHierarchyLoader>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<ICacheService, NoCacheService>();
+builder.Services.AddScoped<IngredientSuggestionService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

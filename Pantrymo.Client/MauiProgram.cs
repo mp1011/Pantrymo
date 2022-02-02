@@ -6,6 +6,7 @@ using Pantrymo.Application.Models;
 using Pantrymo.Application.Services;
 using Pantrymo.ClientInfrastructure;
 using Pantrymo.ClientInfrastructure.Services;
+using Pantrymo.Domain.Services;
 
 namespace Pantrymo.Client
 {
@@ -35,7 +36,7 @@ namespace Pantrymo.Client
             builder.Services.AddScoped<IDataAccess, RemoteDataAccessWithLocalFallback>();
             builder.Services.AddScoped<RemoteDataAccess>();
             builder.Services.AddScoped<LocalDataAccess>();
-            builder.Services.AddScoped<DataSyncService>();
+            builder.Services.AddScoped<PantrymoDataSyncService>();
             builder.Services.AddSingleton<NetworkCheckService>();
             builder.Services.AddScoped<IFullHierarchyLoader, RemoteFullHierarchyLoader>();
             builder.Services.AddScoped<CategoryTreeBuilder>();

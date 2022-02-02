@@ -1,4 +1,4 @@
-﻿namespace Pantrymo.Application.Models
+﻿namespace Pantrymo.Domain.Models
 {
     public class Result<T>
     {

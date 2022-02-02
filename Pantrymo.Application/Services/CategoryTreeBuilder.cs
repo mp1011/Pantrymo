@@ -1,6 +1,7 @@
-﻿using Pantrymo.Application.Extensions;
+﻿using Pantrymo.Domain.Extensions;
 using Pantrymo.Application.Models;
 using Pantrymo.Application.Models.AppModels;
+using Pantrymo.Domain.Services;
 
 namespace Pantrymo.Application.Services
 {

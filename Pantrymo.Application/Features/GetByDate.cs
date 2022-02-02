@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Pantrymo.Application.Extensions;
 using Pantrymo.Application.Models;
+using Pantrymo.Domain.Extensions;
+using Pantrymo.Domain.Models;
 
 namespace Pantrymo.Application.Features
 {

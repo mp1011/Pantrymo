@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Pantrymo.Application.Features;
-using Pantrymo.Application.Models;
+using Pantrymo.Domain.Models;
 
 namespace Pantrymo.Web.Controllers
 {

@@ -1,4 +1,4 @@
-﻿namespace Pantrymo.Application.Extensions
+﻿namespace Pantrymo.Domain.Extensions
 {
     public static class StringExtensions
     {

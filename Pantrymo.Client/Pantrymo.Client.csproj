@@ -67,6 +67,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Pantrymo.Application\Pantrymo.Application.csproj" />
 	  <ProjectReference Include="..\Pantrymo.ClientInfrastructure\Pantrymo.ClientInfrastructure.csproj" />
+	  <ProjectReference Include="..\Pantrymo.Domain\Pantrymo.Domain.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

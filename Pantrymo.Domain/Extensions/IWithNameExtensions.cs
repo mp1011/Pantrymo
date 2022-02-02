@@ -1,6 +1,6 @@
-﻿using Pantrymo.Application.Models;
+﻿using Pantrymo.Domain.Models;
 
-namespace Pantrymo.Application.Extensions
+namespace Pantrymo.Domain.Extensions
 {
     public static class IWithNameExtensions
     {

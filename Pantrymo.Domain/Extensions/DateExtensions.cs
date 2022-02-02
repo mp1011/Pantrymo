@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Pantrymo.Application.Extensions
+namespace Pantrymo.Domain.Extensions
 {
     public static class DateExtensions
     {

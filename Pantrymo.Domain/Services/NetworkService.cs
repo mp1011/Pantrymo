@@ -1,6 +1,6 @@
 ﻿using System.Net.NetworkInformation;
 
-namespace Pantrymo.Application.Services
+namespace Pantrymo.Domain.Services
 {
     public class NetworkCheckService
     {

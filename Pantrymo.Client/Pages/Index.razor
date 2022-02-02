@@ -8,12 +8,12 @@
 @inject IMediator _mediator;
 
 <input id="IngredientTextInput" @bind="IngredientText" @bind:event="oninput" @onkeyup="IngredientText_OnKeyUp" />
-<ul>
+<select @bind="IngredientText">
     @foreach(var ingredient in _ingredientSuggestions)
     {
-        <li>@ingredient</li>
+        <option value=@ingredient>@ingredient</option>
     }
-</ul>
+</select>
 
 @code
 {

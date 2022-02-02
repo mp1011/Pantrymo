@@ -1,4 +1,6 @@
-﻿namespace Pantrymo.Application.Models
+﻿using Pantrymo.Domain.Models;
+
+namespace Pantrymo.Application.Models
 {
     public partial class Site : IWithLastModifiedDate, IWithName { }
     public partial class Component : IWithLastModifiedDate, IWithName { }

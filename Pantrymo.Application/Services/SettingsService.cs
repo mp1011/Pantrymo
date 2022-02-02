@@ -1,16 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Pantrymo.Application.Extensions;
+using Pantrymo.Domain.Extensions;
+using Pantrymo.Domain.Services;
 
 namespace Pantrymo.Application.Services
 {
-    public interface ISettingsService
-    {
-        string ConnectionString { get; }
-        string Host { get; }
-        string LocalDataFolder { get; }
-
-        TimeSpan GetCacheDuration<T>();
-    }
 
     public class SettingsService : ISettingsService
     {

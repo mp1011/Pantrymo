@@ -4,7 +4,7 @@ namespace Pantrymo.Client
 {
     public partial class App : Microsoft.Maui.Controls.Application
     {
-        public App(DataSyncService dataSyncService)
+        public App(PantrymoDataSyncService dataSyncService)
         {
             InitializeComponent();
             dataSyncService.BackgroundSync();

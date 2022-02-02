@@ -1,7 +1,7 @@
-﻿using Pantrymo.Application.Models;
+﻿using Pantrymo.Domain.Models;
 using System.Diagnostics;
 
-namespace Pantrymo.Application.Extensions
+namespace Pantrymo.Domain.Extensions
 {
     public static class TaskExtensions
     {
