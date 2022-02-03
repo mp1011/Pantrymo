@@ -44,6 +44,10 @@ namespace Pantrymo.Client
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
             builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
             builder.Services.AddScoped<IngredientSuggestionService>();
+            builder.Services.AddScoped<RecipeSearchService>();
+            builder.Services.AddScoped<IRecipeSearchProvider, EmptyRecipeSearchProvider>();
+            builder.Services.AddScoped<ISearchService<Component>, BasicComponentSearchService>();
+            builder.Services.AddScoped<ISearchService<Cuisine>, BasicCuisineSearchService>();
 
             return builder.Build();
         }

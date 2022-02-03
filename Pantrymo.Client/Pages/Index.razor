@@ -17,12 +17,20 @@
     }
 </ul>
 
+<ul>
+    @foreach(var result in _searchResults)
+    {
+        <li>@result.Title</li>
+    }
+</ul>
+
 @code
 {
 
     string IngredientText { get; set; }
 
     private string[] _ingredientSuggestions = new string[] { };
+    private RecipeDetail[] _searchResults = new RecipeDetail[] { };
 
     public async void IngredientText_OnKeyUp(KeyboardEventArgs args)
     {
@@ -39,6 +47,12 @@
     {
         var suggestions = await _mediator.Send(new SuggestIngredientsFeature.Query(IngredientText,5));
         _ingredientSuggestions = suggestions;
+        StateHasChanged();
+    }
+
+    private async Task DoRecipeSearch()
+    {
+        _searchResults = await _mediator.Send(new RecipeSearchFeature.Query(new string[]{IngredientText}, new string[]{"Italian"},0,10));
         StateHasChanged();
     }
 }

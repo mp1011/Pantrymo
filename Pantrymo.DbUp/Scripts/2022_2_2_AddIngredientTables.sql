@@ -16,3 +16,4 @@ CREATE TABLE AlternateComponentNames
 	ComponentId INTEGER NOT NULL,
 	LastModified TEXT NOT NULL
 );
+

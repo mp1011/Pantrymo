@@ -10,6 +10,14 @@ namespace Pantrymo.Application.Services
         Task<RecipeSearchResult[]> Search(Component[] components, Cuisine[] cuisines, RecipeSearchArgs args);
     }
 
+    public class EmptyRecipeSearchProvider : IRecipeSearchProvider
+    {
+        public Task<RecipeSearchResult[]> Search(Component[] components, Cuisine[] cuisines, RecipeSearchArgs args)
+        {
+            return Task.FromResult(new RecipeSearchResult[] { });
+        }
+    }
+
     public class RecipeSearchService 
     {
         private readonly ISearchService<Component> _componentSearchService;

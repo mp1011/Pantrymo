@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Scripts\AddLastModifiedToIngredients.sql" />
+    <None Remove="Scripts\2022_2_1_AddLastModifiedToIngredients.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\AddLastModifiedToIngredients.sql">
+    <EmbeddedResource Include="Scripts\2022_2_1_AddLastModifiedToIngredients.sql">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
