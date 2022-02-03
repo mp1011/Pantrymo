@@ -10,5 +10,13 @@
             else
                 return 0;
         }
+
+        public static string[] FromCSV(this string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return new string[] { };
+            else
+                return str.Split(',');
+        }
     }
 }

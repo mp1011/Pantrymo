@@ -8,12 +8,14 @@
 @inject IMediator _mediator;
 
 <input id="IngredientTextInput" @bind="IngredientText" @bind:event="oninput" @onkeyup="IngredientText_OnKeyUp" />
-<select @bind="IngredientText">
+<ul class="list-group">
     @foreach(var ingredient in _ingredientSuggestions)
     {
-        <option value=@ingredient>@ingredient</option>
+        <li class="list-group-item list-group-item-light list-group-item-action" 
+            data-value=@ingredient
+            @onclick="()=> IngredientSuggestionClick(ingredient)">@ingredient</li>
     }
-</select>
+</ul>
 
 @code
 {
@@ -25,6 +27,12 @@
     public async void IngredientText_OnKeyUp(KeyboardEventArgs args)
     {
         await SuggestIngredients();
+    }
+
+    public async void IngredientSuggestionClick(string ingredient)
+    {
+        IngredientText = ingredient;
+        await Task.Delay(1);
     }
 
     private async Task SuggestIngredients()

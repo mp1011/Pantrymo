@@ -22,7 +22,15 @@ namespace Pantrymo.ServerInfrastructure
 
         IQueryable<AlternateComponentName> IDataContext.AlternateComponentNames => AlternateComponentNames;
 
+        IQueryable<Recipe> IDataContext.RecipesWithIngredients => Recipes
+            .Include(r => r.Site)
+            .Include(r => r.IngredientTexts)
+                .ThenInclude(t => t.RecipeIngredients)
+                .ThenInclude(t => t.Component);
+        IQueryable<Cuisine> IDataContext.Cuisines => Cuisines;
+
         public virtual DbSet<FullHierarchy> FullHierarchy { get; set; }
+        public virtual DbSet<RecipeSearchResult> RecipeSearchResults { get; set; }
 
         public async Task InsertAsync(Site[] records) => await Sites.AddRangeAsync(records);
         public async Task InsertAsync(Component[] records) => await Components.AddRangeAsync(records);
@@ -47,6 +55,9 @@ namespace Pantrymo.ServerInfrastructure
 
             modelBuilder.Entity<FullHierarchy>()
                 .HasNoKey();
+
+            modelBuilder.Entity<RecipeSearchResult>()
+               .HasKey(p => p.RecipeId);
         }
     }
 }

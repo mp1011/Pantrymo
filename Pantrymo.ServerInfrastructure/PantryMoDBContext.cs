@@ -355,10 +355,10 @@ namespace Pantrymo.ServerInfrastructure
                     .IsRequired()
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.IngredientTexts)
-                    .HasForeignKey(d => d.RecipeId)
-                    .HasConstraintName("FK_IngredientText_Recipe");
+                //entity.HasOne(d => d.Recipe)
+                //    .WithMany(p => p.IngredientTexts)
+                //    .HasForeignKey(d => d.RecipeId)
+                //    .HasConstraintName("FK_IngredientText_Recipe");
             });
 
             modelBuilder.Entity<LatestRecipeAudit>(entity =>
@@ -654,11 +654,11 @@ namespace Pantrymo.ServerInfrastructure
                     .IsRequired()
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.RecipeSteps)
-                    .HasForeignKey(d => d.RecipeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_RecipeSteps_Recipes");
+                //entity.HasOne(d => d.Recipe)
+                //    .WithMany(p => p.RecipeSteps)
+                //    .HasForeignKey(d => d.RecipeId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_RecipeSteps_Recipes");
             });
 
             modelBuilder.Entity<RecipeTrait>(entity =>
@@ -670,10 +670,10 @@ namespace Pantrymo.ServerInfrastructure
                 entity.HasIndex(e => e.TraitValueId, "IX_RecipeTraits_TraitValueId")
                     .HasFillFactor(80);
 
-                entity.HasOne(d => d.Recipe)
-                    .WithMany(p => p.RecipeTraits)
-                    .HasForeignKey(d => d.RecipeId)
-                    .HasConstraintName("FK_RecipeTraits_Recipes");
+                //entity.HasOne(d => d.Recipe)
+                //    .WithMany(p => p.RecipeTraits)
+                //    .HasForeignKey(d => d.RecipeId)
+                //    .HasConstraintName("FK_RecipeTraits_Recipes");
 
                 entity.HasOne(d => d.TraitValue)
                     .WithMany(p => p.RecipeTraits)

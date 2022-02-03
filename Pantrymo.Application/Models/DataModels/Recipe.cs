@@ -21,7 +21,7 @@ namespace Pantrymo.Application.Models
         public string ImageUrl { get; set; }
         public bool IncludeInSearches { get; set; }
 
-        public virtual Author Author { get; set; }
+        public virtual Author? Author { get; set; }
         public virtual Site Site { get; set; }
         public virtual ICollection<IngredientText> IngredientTexts { get; set; }
         public virtual ICollection<RecipeAudit> RecipeAudits { get; set; }

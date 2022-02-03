@@ -23,6 +23,14 @@ namespace Pantrymo.ClientInfrastructure
             //  .ThenInclude(c => c.NegativeComponent);
 
         IQueryable<AlternateComponentName> IDataContext.AlternateComponentNames => AlternateComponentNames;
+        IQueryable<Recipe> IDataContext.RecipesWithIngredients => Recipes;
+            //.Include(r => r.Site)
+            //.Include(r => r.IngredientTexts)
+            //    .ThenInclude(t => t.RecipeIngredients)
+            //    .ThenInclude(t => t.Component);
+
+        IQueryable<Cuisine> IDataContext.Cuisines => new Cuisine[] { }.AsQueryable(); // replace when this table is added to sqlite
+
 
         public async Task InsertAsync(Site[] records) => await Sites.AddRangeAsync(records);
         public async Task InsertAsync(Component[] records) => await Components.AddRangeAsync(records);

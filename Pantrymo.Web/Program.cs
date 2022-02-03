@@ -21,6 +21,12 @@ builder.Services.AddScoped<IFullHierarchyLoader, FullHierarchyLoader>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<ICacheService, NoCacheService>();
 builder.Services.AddScoped<IngredientSuggestionService>();
+builder.Services.AddScoped<RecipeSearchService>();
+builder.Services.AddScoped<IRecipeSearchProvider, DbRecipeSearchProvider>();
+
+builder.Services.AddScoped<ISearchService<Component>, BasicComponentSearchService>();
+builder.Services.AddScoped<ISearchService<Cuisine>, BasicCuisineSearchService>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -40,5 +46,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
