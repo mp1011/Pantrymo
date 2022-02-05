@@ -6,7 +6,7 @@ namespace Pantrymo.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AlternateComponentNameController : BaseDataAccessController<AlternateComponentName>
+    public class AlternateComponentNameController : BaseDataAccessController<IAlternateComponentName>
     {
         public AlternateComponentNameController(IMediator mediator) : base(mediator) { }        
     }

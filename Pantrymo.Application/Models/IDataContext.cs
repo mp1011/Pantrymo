@@ -15,5 +15,7 @@
         Task InsertAsync(IAlternateComponentName[] records);
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
+
+        string GetQueryString<T>(IQueryable<T> query);
     }
 }

@@ -8,6 +8,7 @@ using Pantrymo.ClientInfrastructure;
 using Pantrymo.ClientInfrastructure.Services;
 using Pantrymo.Domain.Services;
 using Pantrymo.ServerInfrastructure;
+using Pantrymo.ServerInfrastructure.Services;
 using System;
 using System.IO;
 
@@ -73,10 +74,37 @@ namespace Pantrymo.Tests
             return mock;
         }
 
-        public static ICacheService CreateCacheService()
+        public ICacheService CreateCacheService()
         {
             var mock = Substitute.For<ICacheService>();
             return mock;
+        }
+
+        public RecipeSearchService CreateRecipeSearchService()
+        {
+            return new RecipeSearchService(
+                CreateComponentSearchService(),
+                CreateCuisineSearchService(),
+                CreateRecipeSearchProvider(),
+                CreateDataContext());
+        }
+
+        public ISearchService<IComponent> CreateComponentSearchService()
+        {
+            return new BasicComponentSearchService(CreateDataContext());
+        }
+
+        public ISearchService<ICuisine> CreateCuisineSearchService()
+        {
+            return new BasicCuisineSearchService(CreateDataContext());
+        }
+
+        public IRecipeSearchProvider CreateRecipeSearchProvider()
+        {
+            if (_testEnvironment == TestEnvironment.Sqlite)
+                return new EmptyRecipeSearchProvider();
+            else
+                return new DbRecipeSearchProvider(CreateDataContext() as SqlServerDbContext);
         }
     }
 }

@@ -44,6 +44,8 @@ namespace Pantrymo.SqlInfrastructure
         public async Task InsertAsync(IComponent[] records) => await Components.AddRangeAsync(records.OfType<Component>());
         public async Task InsertAsync(IAlternateComponentName[] records) => await AlternateComponentNames.AddRangeAsync(records.OfType<AlternateComponentName>());
 
+        public string GetQueryString<T>(IQueryable<T> query) => query.ToQueryString();
+
         #region DB Sets
         public virtual DbSet<AlternateComponentName> AlternateComponentNames { get; set; }
         public virtual DbSet<Author> Authors { get; set; }
@@ -55,5 +57,7 @@ namespace Pantrymo.SqlInfrastructure
         public virtual DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public virtual DbSet<Site> Sites { get; set; }
         #endregion
+
+        
     }
 }

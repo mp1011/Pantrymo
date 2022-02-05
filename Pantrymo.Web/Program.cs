@@ -10,8 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-
+builder.Services
+	.AddControllers()
+	.AddNewtonsoftJson();
 
 builder.Services.AddMediatR(typeof(CategoryTreeFeature));
 builder.Services.AddDbContext<IDataContext, SqlServerDbContext>();

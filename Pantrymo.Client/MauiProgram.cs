@@ -49,6 +49,8 @@ namespace Pantrymo.Client
             builder.Services.AddScoped<ISearchService<IComponent>, BasicComponentSearchService>();
             builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>();
 
+            builder.Services.AddScoped<HttpService>();
+            builder.Services.AddSingleton(_ => new CustomJsonSerializer(typeof(IRecipe).Assembly, typeof(Recipe).Assembly));
             return builder.Build();
         }
     }

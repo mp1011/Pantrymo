@@ -1,4 +1,5 @@
-﻿using Pantrymo.Domain.Extensions;
+﻿#nullable disable
+using Pantrymo.Domain.Extensions;
 using Pantrymo.Application.Models;
 using Pantrymo.Application.Models.AppModels;
 using Pantrymo.Domain.Services;
@@ -25,7 +26,8 @@ namespace Pantrymo.Application.Services
             if(categoryTree == null)
             {
                 categoryTree = await BuildCategoryTree();
-                await _cache.Add(categoryTree);
+                if(categoryTree.SubCategories.Any())
+                    await _cache.Add(categoryTree);
             }
 
             return categoryTree;
@@ -55,7 +57,10 @@ namespace Pantrymo.Application.Services
         {
             foreach (var group in hierarchies.GroupBy(p => p.GetLevel(level)).Where(g => g.Key != null))
             {
-                var component = components[group.Key];
+                var component = components.GetValueOrDefault(group.Key);
+                if(component == null)
+                    continue;
+
                 var category = master.GetOrAddSubcategory(group.Key);
                 if (!category.AlternateNames.Any())
                 {

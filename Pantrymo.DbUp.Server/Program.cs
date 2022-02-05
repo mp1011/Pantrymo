@@ -7,6 +7,7 @@ var upgrader =
         DeployChanges.To
             .SqlDatabase(connectionString)
             .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+            .WithTransaction()
             .LogToConsole()
             .Build();
 

@@ -5,7 +5,8 @@
 	SiteId INTEGER NOT NULL,
 	Url TEXT NOT NULL,
 	ImageUrl TEXT NULL,
-	IncludeInSearches INTEGER NOT NULL
+	IncludeInSearches INTEGER NOT NULL,
+	LastModified TEXT NOT NULL
 );
 
 CREATE TABLE Sites (
@@ -39,29 +40,34 @@ CREATE TABLE Cuisines(
 	Id INTEGER PRIMARY KEY,
 	[Name] TEXT NOT NULL,
 	Generic INTEGER NOT NULL,
-	Esque INTEGER NOT NULL
+	Esque INTEGER NOT NULL,
+	LastModified TEXT NOT NULL
 );
 
 CREATE TABLE RecipeIngredients(
 	Id INTEGER PRIMARY KEY,
 	TextId INTEGER NOT NULL,
 	ComponentId INTEGER NOT NULL,
-	MultipleChoice INTEGER NOT NULL
+	MultipleChoice INTEGER NOT NULL,
+	LastModified TEXT NOT NULL
 );
 
 CREATE TABLE IngredientText(
 	Id INTEGER PRIMARY KEY,
 	RecipeId INTEGER NOT NULL,
-	[TEXT] TEXT NOT NULL
+	[TEXT] TEXT NOT NULL,
+	LastModified TEXT NOT NULL
 );
 
 CREATE TABLE Authors(
 	Id INTEGER PRIMARY KEY,
-	Name TEXT NOT NULL
+	Name TEXT NOT NULL,
+	LastModified TEXT NOT NULL
 );
 
 CREATE TABLE ComponentNegativeRelations(
 	Id INTEGER PRIMARY KEY,
 	ComponentId INTEGER NOT NULL,
-	NegativeComponentId INTEGER NOT NULL
+	NegativeComponentId INTEGER NOT NULL,
+	LastModified TEXT NOT NULL
 );

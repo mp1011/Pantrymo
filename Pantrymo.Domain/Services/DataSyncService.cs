@@ -38,7 +38,14 @@ namespace Pantrymo.Domain.Services
                     return false;
 
                 if (newFromServer.Data.Any())
-                    await InsertRecords(newFromServer.Data);
+                {
+                    var success = await InsertRecords(newFromServer.Data)
+                                        .CheckSuccess();
+
+                    if (!success)
+                        return false;
+
+                }
 
                 LastSuccessfulSync = DateTime.Now;
                 return true;

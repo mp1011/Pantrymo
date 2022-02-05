@@ -1,5 +1,4 @@
-﻿using Pantrymo.Application.Extensions;
-using Pantrymo.Application.Models;
+﻿using Pantrymo.Application.Models;
 using Pantrymo.Domain.Extensions;
 using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services;
@@ -35,17 +34,21 @@ namespace Pantrymo.Application.Services
     public class RemoteDataAccess : IDataAccess
     {
         private readonly ISettingsService _settingsService;
+        private readonly HttpService _httpService;
 
-        public RemoteDataAccess(ISettingsService settingsService)
+        public RemoteDataAccess(ISettingsService settingsService, HttpService httpService)
         {
             _settingsService = settingsService;
+            _httpService = httpService;
         }
 
         private async Task<Result<T[]>> GetRecords<T>(DateTime from)
         {
-            using var webClient = new HttpClient();
-            return await webClient
-                    .GetJsonArrayAsync<T>($"{_settingsService.Host}/api/{typeof(T).Name}/GetByDate/{from.ToUrlDateString()}");
+            var modelName = typeof(T).Name;
+            if (modelName.StartsWith("I"))
+                modelName = modelName.Substring(1);
+
+            return await _httpService.GetJsonArrayAsync<T>($"{_settingsService.Host}/api/{modelName}/GetByDate/{from.ToUrlDateString()}");
         }
 
         public async Task<Result<ISite[]>> GetSites(DateTime from) => await GetRecords<ISite>(from);

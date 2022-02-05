@@ -27,36 +27,8 @@ namespace Pantrymo.ServerInfrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<FullHierarchy>()
-              .HasNoKey();
-
-            modelBuilder.Entity<RecipeSearchResult>()
-               .HasKey(p => p.RecipeId);
-
-            modelBuilder.Entity<AlternateComponentName>(entity =>
-            {
-                entity.Property(e => e.AlternateName)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.LastModified).HasColumnType("datetime");
-
-                //entity.HasOne(d => d.Component)
-                //    .WithMany(p => p.AlternateComponentNames)
-                //    .HasForeignKey(d => d.ComponentId)
-                //    .OnDelete(DeleteBehavior.ClientSetNull)
-                //    .HasConstraintName("FK_AlternateComponentNames_Components");
-            });
-
-            modelBuilder.Entity<Author>(entity =>
-            {
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-            });
-
+            modelBuilder.Entity<FullHierarchy>().HasNoKey();
+            modelBuilder.Entity<RecipeSearchResult>().HasNoKey();
 
             modelBuilder.Entity<Component>(entity =>
             {
@@ -72,7 +44,6 @@ namespace Pantrymo.ServerInfrastructure
                     .HasMaxLength(100)
                     .IsUnicode(false);
             });
-
 
             modelBuilder.Entity<ComponentHierarchy>(entity =>
             {
@@ -204,7 +175,6 @@ namespace Pantrymo.ServerInfrastructure
                     .IsUnicode(false);
             });
         }
-
 
     }
 }

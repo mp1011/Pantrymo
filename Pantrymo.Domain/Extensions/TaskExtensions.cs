@@ -54,6 +54,21 @@ namespace Pantrymo.Domain.Extensions
             return task.HandleError(ex => default);
         }
 
+        public static Task<bool> CheckSuccess(this Task task)
+        {
+            return task.ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    Debug.WriteLine(t.Exception.Message);
+                    Debug.WriteLine(t.Exception.StackTrace);
+                    return false;
+                }
+
+                return true;
+            });
+        }
+
 
         public static Task<T?> DebugLogError<T>(this Task<T?> task)
         {

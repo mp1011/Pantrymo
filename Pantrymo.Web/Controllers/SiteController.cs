@@ -6,7 +6,7 @@ namespace Pantrymo.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SiteController : BaseDataAccessController<Site>
+    public class SiteController : BaseDataAccessController<ISite>
     {
         public SiteController(IMediator mediator) : base(mediator) { }        
     }
