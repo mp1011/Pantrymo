@@ -1,12 +1,21 @@
-﻿using Pantrymo.Application.Services;
+﻿#nullable disable
+
 using Pantrymo.Domain.Services;
-using Pantrymo.ServerInfrastructure;
 
-var ctx = new PantryMoDBContext(new FakeSettingsService(),new Microsoft.EntityFrameworkCore.DbContextOptions<PantryMoDBContext>());
+//var ctx = new SqlServerDbContext(new FakeSettingsService(),new Microsoft.EntityFrameworkCore.DbContextOptions<SqlServerDbContext>());
 
-var x = ctx.Recipes.FirstOrDefault(p => p.Id == 6361);
+partial class Program
+{
+    static void Main(string[] args)
+    {
+       HelloFrom("Generated Code");
+    }
 
-Console.WriteLine(x.Title);
+    static void HelloFrom(string name) { }
+}
+
+
+
 
 class FakeSettingsService : ISettingsService
 {

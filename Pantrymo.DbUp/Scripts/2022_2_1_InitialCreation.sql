@@ -8,11 +8,60 @@
 	IncludeInSearches INTEGER NOT NULL
 );
 
-
 CREATE TABLE Sites (
 	Id INTEGER PRIMARY KEY,
 	Name TEXT NOT NULL,
 	Url TEXT NOT NULL,
 	EnableScraping INTEGER NOT NULL,
 	LastModified TEXT NOT NULL
+);
+
+CREATE TABLE Components
+(
+	Id INTEGER PRIMARY KEY, 
+	[Name] TEXT NOT NULL,	
+	NonComponent INTEGER NOT NULL,
+	Assumed INTEGER  NOT NULL,
+	MasterCategory INTEGER  NOT NULL,
+	SubCategory INTEGER NOT NULL,
+	LastModified TEXT NOT NULL
+);
+
+CREATE TABLE AlternateComponentNames
+(
+	Id INTEGER PRIMARY KEY,
+	AlternateName TEXT NOT NULL,
+	ComponentId INTEGER NOT NULL,
+	LastModified TEXT NOT NULL
+);
+
+CREATE TABLE Cuisines(
+	Id INTEGER PRIMARY KEY,
+	[Name] TEXT NOT NULL,
+	Generic INTEGER NOT NULL,
+	Esque INTEGER NOT NULL
+);
+
+CREATE TABLE RecipeIngredients(
+	Id INTEGER PRIMARY KEY,
+	TextId INTEGER NOT NULL,
+	ComponentId INTEGER NOT NULL,
+	MultipleChoice INTEGER NOT NULL
+);
+
+CREATE TABLE IngredientText(
+	Id INTEGER PRIMARY KEY,
+	RecipeId INTEGER NOT NULL,
+	[TEXT] TEXT NOT NULL
+);
+
+CREATE TABLE Authors(
+	Id INTEGER PRIMARY KEY,
+	Name TEXT NOT NULL
+);
+
+CREATE TABLE ComponentNegativeRelations(
+	Id INTEGER PRIMARY KEY,
+	ComponentId INTEGER NOT NULL,
+	NegativeComponentId INTEGER NOT NULL
 );

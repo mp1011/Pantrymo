@@ -9,13 +9,6 @@
 
   <ItemGroup>
     <None Remove="Scripts\2022_2_1_InitialCreation.sql" />
-    <None Remove="Scripts\2022_2_2_AddIngredientTables.sql" />
-    <None Remove="Scripts\2022_2_3_AddRecipeTables.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Scripts\2022_2_3_AddRecipeTables.sql" />
-    <EmbeddedResource Include="Scripts\2022_2_2_AddIngredientTables.sql" />
   </ItemGroup>
 
   <ItemGroup>

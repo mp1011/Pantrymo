@@ -7,12 +7,12 @@ namespace Pantrymo.Application.Services
 
     public interface IRecipeSearchProvider
     {
-        Task<RecipeSearchResult[]> Search(Component[] components, Cuisine[] cuisines, RecipeSearchArgs args);
+        Task<RecipeSearchResult[]> Search(IComponent[] components, ICuisine[] cuisines, RecipeSearchArgs args);
     }
 
     public class EmptyRecipeSearchProvider : IRecipeSearchProvider
     {
-        public Task<RecipeSearchResult[]> Search(Component[] components, Cuisine[] cuisines, RecipeSearchArgs args)
+        public Task<RecipeSearchResult[]> Search(IComponent[] components, ICuisine[] cuisines, RecipeSearchArgs args)
         {
             return Task.FromResult(new RecipeSearchResult[] { });
         }
@@ -20,12 +20,12 @@ namespace Pantrymo.Application.Services
 
     public class RecipeSearchService 
     {
-        private readonly ISearchService<Component> _componentSearchService;
-        private readonly ISearchService<Cuisine> _cuisineSearchService;
+        private readonly ISearchService<IComponent> _componentSearchService;
+        private readonly ISearchService<ICuisine> _cuisineSearchService;
         private readonly IRecipeSearchProvider _recipeSearchProvider;
         private readonly IDataContext _dataContext;
 
-        public RecipeSearchService(ISearchService<Component> componentSearchService, ISearchService<Cuisine> cuisineSearchService, IRecipeSearchProvider recipeSearchProvider, IDataContext dataContext)
+        public RecipeSearchService(ISearchService<IComponent> componentSearchService, ISearchService<ICuisine> cuisineSearchService, IRecipeSearchProvider recipeSearchProvider, IDataContext dataContext)
         {
             _componentSearchService = componentSearchService;
             _cuisineSearchService = cuisineSearchService;
@@ -33,7 +33,7 @@ namespace Pantrymo.Application.Services
             _dataContext = dataContext;
         }
 
-        public async Task<RecipeDetail[]> Search(RecipeSearchArgs args)
+        public async Task<IRecipe[]> Search(RecipeSearchArgs args)
         {
             var components = await _componentSearchService.Search(args.Ingredients);
             var cuisines = await _cuisineSearchService.Search(args.Cuisines);
@@ -41,18 +41,12 @@ namespace Pantrymo.Application.Services
             var results = await _recipeSearchProvider.Search(components, cuisines,args);
 
             return results
-                .Select(GetRecipeDetail)
+                .Select(GetRecipe)
                 .Where(p=>p!=null)
                 .ToArray();
         }
 
-        private RecipeDetail? GetRecipeDetail(RecipeSearchResult result)
-        {
-            var recipe = _dataContext.RecipesWithIngredients.FirstOrDefault(p => p.Id == result.RecipeId);
-            if(recipe == null)
-                return null;
-
-            return new RecipeDetail(recipe.Id, recipe.Title, recipe.Url, recipe.ImageUrl);
-        }
+        private IRecipe? GetRecipe(RecipeSearchResult result) 
+            => _dataContext.Recipes.FirstOrDefault(p => p.Id == result.RecipeId);
     }
 }

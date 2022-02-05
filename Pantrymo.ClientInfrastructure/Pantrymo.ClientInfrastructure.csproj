@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pantrymo.Application\Pantrymo.Application.csproj" />
+    <ProjectReference Include="..\Pantrymo.SqlInfrastructure\Pantrymo.SqlInfrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

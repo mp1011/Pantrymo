@@ -38,7 +38,7 @@ namespace Pantrymo.Application.Services
             if (hierarchy.Any(p => p.Level7 != null))
                 throw new Exception("Additional level needed");
 
-            var components = _dbContext.Components.ToArray();
+            var components = _dbContext.ComponentsDetail.ToArray();
 
             var master = new Category();
 
@@ -50,7 +50,7 @@ namespace Pantrymo.Application.Services
             return master;
         }
 
-        private void FillHierarchy(int level, Dictionary<string, Component> components, IEnumerable<FullHierarchy> hierarchies,
+        private void FillHierarchy(int level, Dictionary<string, IComponentDetail> components, IEnumerable<FullHierarchy> hierarchies,
            Category node, Category master)
         {
             foreach (var group in hierarchies.GroupBy(p => p.GetLevel(level)).Where(g => g.Key != null))

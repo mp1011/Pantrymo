@@ -2,6 +2,7 @@
 @using MediatR
 @using System
 @using Pantrymo.Application.Features
+@using Pantrymo.Application.Models
 @using Pantrymo.Application.Models.AppModels
 
 
@@ -26,11 +27,11 @@
 
 @code
 {
-
+    private CancellationTokenSource _tokenSource = new CancellationTokenSource();    
     string IngredientText { get; set; }
 
     private string[] _ingredientSuggestions = new string[] { };
-    private RecipeDetail[] _searchResults = new RecipeDetail[] { };
+    private IRecipe[] _searchResults = new IRecipe[] { };
 
     public async void IngredientText_OnKeyUp(KeyboardEventArgs args)
     {
@@ -40,7 +41,7 @@
     public async void IngredientSuggestionClick(string ingredient)
     {
         IngredientText = ingredient;
-        await Task.Delay(1);
+        await DoRecipeSearch();
     }
 
     private async Task SuggestIngredients()
@@ -52,7 +53,28 @@
 
     private async Task DoRecipeSearch()
     {
-        _searchResults = await _mediator.Send(new RecipeSearchFeature.Query(new string[]{IngredientText}, new string[]{"Italian"},0,10));
-        StateHasChanged();
+        if(_tokenSource != null)
+            _tokenSource.Cancel();
+
+        _tokenSource = new CancellationTokenSource();
+        await DoRecipeSearch(_tokenSource.Token);
+        _tokenSource = null;
+    }
+
+    private async Task DoRecipeSearch(CancellationToken cancellationToken)
+    {
+        System.Diagnostics.Debug.WriteLine("DRS BEGIN");
+        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+        if (cancellationToken.IsCancellationRequested)
+            return;
+
+        System.Diagnostics.Debug.WriteLine("DRS SEND");
+        var results = await _mediator.Send(new RecipeSearchFeature.Query(new string[]{IngredientText}, new string[]{"Italian"},0,10));
+        if (cancellationToken.IsCancellationRequested)
+            return;
+            
+        System.Diagnostics.Debug.WriteLine("DRS END");
+        _searchResults = results;
+        StateHasChanged(); 
     }
 }

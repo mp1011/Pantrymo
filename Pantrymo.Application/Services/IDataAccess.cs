@@ -8,9 +8,9 @@ namespace Pantrymo.Application.Services
 {
     public interface IDataAccess
     {
-        Task<Result<Site[]>> GetSites(DateTime from);
-        Task<Result<Component[]>> GetComponents(DateTime from);
-        Task<Result<AlternateComponentName[]>> GetAlternateComponentName(DateTime from);
+        Task<Result<ISite[]>> GetSites(DateTime from);
+        Task<Result<IComponent[]>> GetComponents(DateTime from);
+        Task<Result<IAlternateComponentName[]>> GetAlternateComponentName(DateTime from);
     }
 
     public class LocalDataAccess : IDataAccess
@@ -22,13 +22,13 @@ namespace Pantrymo.Application.Services
             _dataContext = dataContext;
         }
 
-        public async Task<Result<Site[]>> GetSites(DateTime from) 
+        public async Task<Result<ISite[]>> GetSites(DateTime from) 
             => await _dataContext.Sites.GetByDateAsync(from);
                     
-        public async Task<Result<Component[]>> GetComponents(DateTime from) 
+        public async Task<Result<IComponent[]>> GetComponents(DateTime from) 
             => await _dataContext.Components.GetByDateAsync(from);
 
-        public async Task<Result<AlternateComponentName[]>> GetAlternateComponentName(DateTime from) 
+        public async Task<Result<IAlternateComponentName[]>> GetAlternateComponentName(DateTime from) 
             => await _dataContext.AlternateComponentNames.GetByDateAsync(from);
     }
 
@@ -48,11 +48,11 @@ namespace Pantrymo.Application.Services
                     .GetJsonArrayAsync<T>($"{_settingsService.Host}/api/{typeof(T).Name}/GetByDate/{from.ToUrlDateString()}");
         }
 
-        public async Task<Result<Site[]>> GetSites(DateTime from) => await GetRecords<Site>(from);
+        public async Task<Result<ISite[]>> GetSites(DateTime from) => await GetRecords<ISite>(from);
 
-        public async Task<Result<Component[]>> GetComponents(DateTime from) => await GetRecords<Component>(from);
+        public async Task<Result<IComponent[]>> GetComponents(DateTime from) => await GetRecords<IComponent>(from);
 
-        public async Task<Result<AlternateComponentName[]>> GetAlternateComponentName(DateTime from) => await GetRecords<AlternateComponentName>(from);
+        public async Task<Result<IAlternateComponentName[]>> GetAlternateComponentName(DateTime from) => await GetRecords<IAlternateComponentName>(from);
        
     }
 
@@ -84,13 +84,13 @@ namespace Pantrymo.Application.Services
             return result;
         }
 
-        public async Task<Result<Site[]>> GetSites(DateTime from) 
+        public async Task<Result<ISite[]>> GetSites(DateTime from) 
             => await GetData(_webAPI.GetSites(from), _fallbackAPI.GetSites(from));
 
-        public async Task<Result<Component[]>> GetComponents(DateTime from) 
+        public async Task<Result<IComponent[]>> GetComponents(DateTime from) 
             => await GetData(_webAPI.GetComponents(from), _fallbackAPI.GetComponents(from));
 
-        public async Task<Result<AlternateComponentName[]>> GetAlternateComponentName(DateTime from) 
+        public async Task<Result<IAlternateComponentName[]>> GetAlternateComponentName(DateTime from) 
             => await GetData(_webAPI.GetAlternateComponentName(from), _fallbackAPI.GetAlternateComponentName(from));
 
     }

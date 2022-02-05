@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Pantrymo.Application.Extensions;
 using Pantrymo.Application.Models;
 using Pantrymo.Domain.Extensions;
 using Pantrymo.Domain.Models;
@@ -33,31 +32,31 @@ namespace Pantrymo.Application.Features
             protected abstract Task<Result<T[]>> GetByDate(IDataContext dataContext, DateTime dateFrom);
         }
 
-        public class GetSitesByDateHandler : Handler<Site>
+        public class GetSitesByDateHandler : Handler<ISite>
         {
             public GetSitesByDateHandler(IDataContext dataContext) : base(dataContext) { }
 
-            protected override async Task<Result<Site[]>> GetByDate(IDataContext dataContext, DateTime dateFrom)
+            protected override async Task<Result<ISite[]>> GetByDate(IDataContext dataContext, DateTime dateFrom)
             {
                 return await dataContext.Sites.GetByDateAsync(dateFrom);
             }
         }
 
-        public class GetComponentsByDateHandler : Handler<Component>
+        public class GetComponentsByDateHandler : Handler<IComponent>
         {
             public GetComponentsByDateHandler(IDataContext dataContext) : base(dataContext) { }
 
-            protected override async Task<Result<Component[]>> GetByDate(IDataContext dataContext, DateTime dateFrom)
+            protected override async Task<Result<IComponent[]>> GetByDate(IDataContext dataContext, DateTime dateFrom)
             {
                 return await dataContext.Components.GetByDateAsync(dateFrom);
             }
         }
 
-        public class GetAlternateComponentNamesByDateHandler : Handler<AlternateComponentName>
+        public class GetAlternateComponentNamesByDateHandler : Handler<IAlternateComponentName>
         {
             public GetAlternateComponentNamesByDateHandler(IDataContext dataContext) : base(dataContext) { }
 
-            protected override async Task<Result<AlternateComponentName[]>> GetByDate(IDataContext dataContext, DateTime dateFrom)
+            protected override async Task<Result<IAlternateComponentName[]>> GetByDate(IDataContext dataContext, DateTime dateFrom)
             {
                 return await dataContext.AlternateComponentNames.GetByDateAsync(dateFrom);
             }

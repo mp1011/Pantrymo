@@ -1,14 +1,14 @@
 ﻿namespace Pantrymo.Application.Models
 {
-    public class FullHierarchy
+    public class FullHierarchy 
     {
         public string? Level1 { get; set; }
         public string? Level2 { get; set; }
-        public string? Level3 { get; set; } 
-        public string? Level4 { get; set; } 
-        public string? Level5 { get; set; } 
+        public string? Level3 { get; set; }
+        public string? Level4 { get; set; }
+        public string? Level5 { get; set; }
         public string? Level6 { get; set; }
-        public string? Level7 { get; set; } 
+        public string? Level7 { get; set; }
 
         public string? GetLevel(int level)
         {

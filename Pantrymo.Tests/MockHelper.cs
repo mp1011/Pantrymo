@@ -7,29 +7,40 @@ using Pantrymo.Application.Services;
 using Pantrymo.ClientInfrastructure;
 using Pantrymo.ClientInfrastructure.Services;
 using Pantrymo.Domain.Services;
+using Pantrymo.ServerInfrastructure;
 using System;
 using System.IO;
 
 namespace Pantrymo.Tests
 {
-    internal static class MockHelper
+    internal class MockHelper
     {
-        public static IngredientSuggestionService CreateIngredientSuggestionService()
+        private readonly TestEnvironment _testEnvironment;
+
+        public MockHelper(TestEnvironment testEnvironment)
+        {
+            _testEnvironment = testEnvironment;
+        }
+
+        public IngredientSuggestionService CreateIngredientSuggestionService()
         {
             return new IngredientSuggestionService(CreateCategoryTreeBuilder());
         }
 
-        public static CategoryTreeBuilder CreateCategoryTreeBuilder()
+        public CategoryTreeBuilder CreateCategoryTreeBuilder()
         {
             return new CategoryTreeBuilder(CreateDataContext(), CreateFullHierarchyLoader(), CreateCacheService());
         }
 
-        public static IDataContext CreateDataContext()
+        public IDataContext CreateDataContext()
         {
-            return new PantryMoDBContext(CreateSettingsService(), new DbContextOptions<PantryMoDBContext>());
+            if(_testEnvironment == TestEnvironment.Sqlite)
+                return new SqliteDbContext(CreateSettingsService(), new DbContextOptions<SqliteDbContext>());
+            else
+                return new SqlServerDbContext(CreateSettingsService(), new DbContextOptions<SqlServerDbContext>());
         }
 
-        public static IFullHierarchyLoader CreateFullHierarchyLoader()
+        public IFullHierarchyLoader CreateFullHierarchyLoader()
         {
             var localStorage = CreateLocalStorage();
 
@@ -38,19 +49,24 @@ namespace Pantrymo.Tests
             return mock;
         }
 
-        public static ILocalStorage CreateLocalStorage()
+        public ILocalStorage CreateLocalStorage()
         {
             return new LocalStorage(CreateSettingsService());
         }
 
-        public static ISettingsService CreateSettingsService()
+        public ISettingsService CreateSettingsService()
         {
             var projectFolder = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
             while (projectFolder.Name != "Pantrymo.Tests")
                 projectFolder = projectFolder.Parent;
            
             var mock = Substitute.For<ISettingsService>();
-            mock.ConnectionString.Returns(@$"Data Source={projectFolder.FullName}\TestData\PantrymoDB.db");
+
+            if(_testEnvironment == TestEnvironment.Sqlite)
+                mock.ConnectionString.Returns(@$"Data Source={projectFolder.FullName}\TestData\PantrymoDB.db");
+            else
+                mock.ConnectionString.Returns(@$"Server=localhost;Database=PantryMoDB;Trusted_Connection=True;");
+
             mock.LocalDataFolder.Returns(@$"{projectFolder.FullName}\TestData");
             mock.GetCacheDuration<Category>().ReturnsForAnyArgs(callInfo=> TimeSpan.Zero);
 

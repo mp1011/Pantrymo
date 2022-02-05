@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFrameworkCore.SqlServer.HierarchyId" Version="3.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -34,6 +35,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pantrymo.Application\Pantrymo.Application.csproj" />
+    <ProjectReference Include="..\Pantrymo.Domain\Pantrymo.Domain.csproj" />
+    <ProjectReference Include="..\Pantrymo.SqlInfrastructure\Pantrymo.SqlInfrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -13,7 +13,7 @@ namespace Pantrymo.Application.Services
     {
         private readonly ILocalStorage _localStorage;
         private readonly ISettingsService _settingsService;
-public RemoteFullHierarchyLoader(ILocalStorage localStorage, ISettingsService settingsService)
+        public RemoteFullHierarchyLoader(ILocalStorage localStorage, ISettingsService settingsService)
         {
             _localStorage = localStorage;
             _settingsService = settingsService;

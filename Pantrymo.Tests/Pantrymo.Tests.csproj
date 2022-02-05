@@ -19,10 +19,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Pantrymo.Application\Pantrymo.Application.csproj" />
     <ProjectReference Include="..\Pantrymo.ClientInfrastructure\Pantrymo.ClientInfrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="TestData\" />
+    <ProjectReference Include="..\Pantrymo.ServerInfrastructure\Pantrymo.ServerInfrastructure.csproj" />
+    <ProjectReference Include="..\Pantrymo.SqlInfrastructure\Pantrymo.SqlInfrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

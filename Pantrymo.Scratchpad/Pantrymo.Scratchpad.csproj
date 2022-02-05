@@ -15,8 +15,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pantrymo.Application\Pantrymo.Application.csproj" />
-    <ProjectReference Include="..\Pantrymo.ClientInfrastructure\Pantrymo.ClientInfrastructure.csproj" />
+    <ProjectReference Include="..\Pantrymo.ClientInfrastructure\Pantrymo.ClientInfrastructure.csproj" />	
     <ProjectReference Include="..\Pantrymo.ServerInfrastructure\Pantrymo.ServerInfrastructure.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Pantrymo.Scratchpad.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
 
 </Project>

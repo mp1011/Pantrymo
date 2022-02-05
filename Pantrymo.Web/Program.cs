@@ -14,7 +14,7 @@ builder.Services.AddControllers();
 
 
 builder.Services.AddMediatR(typeof(CategoryTreeFeature));
-builder.Services.AddDbContext<IDataContext, PantryMoDBContext>();
+builder.Services.AddDbContext<IDataContext, SqlServerDbContext>();
 builder.Services.AddScoped<IDataAccess, LocalDataAccess>();
 builder.Services.AddScoped<CategoryTreeBuilder>();
 builder.Services.AddScoped<IFullHierarchyLoader, FullHierarchyLoader>();
@@ -23,8 +23,8 @@ builder.Services.AddScoped<ICacheService, NoCacheService>();
 builder.Services.AddScoped<IngredientSuggestionService>();
 builder.Services.AddScoped<RecipeSearchService>();
 builder.Services.AddScoped<IRecipeSearchProvider, DbRecipeSearchProvider>();
-builder.Services.AddScoped<ISearchService<Component>, BasicComponentSearchService>();
-builder.Services.AddScoped<ISearchService<Cuisine>, BasicCuisineSearchService>();
+builder.Services.AddScoped<ISearchService<IComponent>, BasicComponentSearchService>();
+builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

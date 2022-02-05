@@ -2,16 +2,17 @@
 {
     public interface IDataContext
     {
-        IQueryable<Site> Sites { get; }
+        IQueryable<ISite> Sites { get; }
+        IQueryable<IComponent> Components { get; }
+        IQueryable<IComponentDetail> ComponentsDetail { get; }
+        IQueryable<ICuisine> Cuisines { get; }
+        IQueryable<IAlternateComponentName> AlternateComponentNames { get; }
+        IQueryable<IRecipe> Recipes { get; }
+        IQueryable<IRecipeDetail> RecipesDetail { get; }
 
-        IQueryable<Component> Components { get; }
-        IQueryable<Cuisine> Cuisines { get; }
-        IQueryable<AlternateComponentName> AlternateComponentNames { get; }
-        IQueryable<Recipe> RecipesWithIngredients { get; }
-
-        Task InsertAsync(Site[] records);
-        Task InsertAsync(Component[] records);
-        Task InsertAsync(AlternateComponentName[] records);
+        Task InsertAsync(ISite[] records);
+        Task InsertAsync(IComponent[] records);
+        Task InsertAsync(IAlternateComponentName[] records);
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
     }

@@ -6,9 +6,9 @@ namespace Pantrymo.ServerInfrastructure.Services
 {
     public class FullHierarchyLoader : IFullHierarchyLoader
     {
-        private readonly PantryMoDBContext _dbContext;
+        private readonly SqlServerDbContext _dbContext;
 
-        public FullHierarchyLoader(PantryMoDBContext dbContext)
+        public FullHierarchyLoader(SqlServerDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -17,6 +17,7 @@ namespace Pantrymo.ServerInfrastructure.Services
         {
             return await _dbContext.FullHierarchy
                 .FromSqlRaw("exec GetFullHierarchy")
+                .Cast<FullHierarchy>()
                 .ToArrayAsync();
         }
     }

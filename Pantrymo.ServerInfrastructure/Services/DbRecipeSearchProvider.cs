@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Pantrymo.Application.Models;
-using Pantrymo.Application.Models.AppModels;
 using Pantrymo.Application.Services;
 using System.Data;
 
@@ -9,14 +8,14 @@ namespace Pantrymo.ServerInfrastructure.Services
 {
     public class DbRecipeSearchProvider : IRecipeSearchProvider
     {
-        private readonly PantryMoDBContext _dbContext;
+        private readonly SqlServerDbContext _dbContext;
 
-        public DbRecipeSearchProvider(PantryMoDBContext dbContext)
+        public DbRecipeSearchProvider(SqlServerDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<RecipeSearchResult[]> Search(Component[] components, Cuisine[] cuisines, RecipeSearchArgs searchArgs)
+        public async Task<RecipeSearchResult[]> Search(IComponent[] components, ICuisine[] cuisines, RecipeSearchArgs searchArgs)
         {
             var dt = new DataTable();
             dt.Columns.Add("ComponentType", typeof(int));
@@ -65,7 +64,9 @@ namespace Pantrymo.ServerInfrastructure.Services
             var matchMin = new SqlParameter("@MatchMinimum", 1);
 
             var results = await _dbContext.RecipeSearchResults.FromSqlRaw("RecipeSearch @Input, @Cuisines, @Traits, @Skip, @Take, @MatchMinimum",
-                input, cuisinesParam, traitsParam, skip, take, matchMin).ToArrayAsync();
+                input, cuisinesParam, traitsParam, skip, take, matchMin)
+                    .Cast<RecipeSearchResult>()
+                    .ToArrayAsync();
 
             return results;
         }

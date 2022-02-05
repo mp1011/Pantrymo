@@ -24,23 +24,23 @@ namespace Pantrymo.Application.Services
         }
     }
 
-    public class BasicComponentSearchService : BasicSearchService<Component>
+    public class BasicComponentSearchService : BasicSearchService<IComponent>
     {
         public BasicComponentSearchService(IDataContext dataContext)
         {
             Query = dataContext.Components;
         }
 
-        protected override IQueryable<Component> Query { get; }
+        protected override IQueryable<IComponent> Query { get; }
     }
 
-    public class BasicCuisineSearchService : BasicSearchService<Cuisine>
+    public class BasicCuisineSearchService : BasicSearchService<ICuisine>
     {
         public BasicCuisineSearchService(IDataContext dataContext)
         {
             Query = dataContext.Cuisines;
         }
 
-        protected override IQueryable<Cuisine> Query { get; }
+        protected override IQueryable<ICuisine> Query { get; }
     }
 }

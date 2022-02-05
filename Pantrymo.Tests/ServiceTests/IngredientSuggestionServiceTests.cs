@@ -1,12 +1,16 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using Pantrymo.Application.Services;
 using System.Threading.Tasks;
 
 namespace Pantrymo.Tests.ServiceTests
 {
-    public class IngredientSuggestionServiceTests
+
+    class IngredientSuggestionServiceTests : MultiEnvironmentTest
     {
+        public IngredientSuggestionServiceTests(TestEnvironment testEnvironment) : base(testEnvironment)
+        {
+        }
+
         [TestCase("chicken", "chicken broth", null)]
         [TestCase("rice", "rice", null)]
         [TestCase("pasta", "pasta", null)]

@@ -32,7 +32,7 @@ namespace Pantrymo.Client
 
             builder.Services.AddBlazorWebView();
             builder.Services.AddMediatR(typeof(CategoryTreeFeature));
-            builder.Services.AddDbContext<IDataContext, PantryMoDBContext>();
+            builder.Services.AddDbContext<IDataContext, SqliteDbContext>();
             builder.Services.AddScoped<IDataAccess, RemoteDataAccessWithLocalFallback>();
             builder.Services.AddScoped<RemoteDataAccess>();
             builder.Services.AddScoped<LocalDataAccess>();
@@ -46,8 +46,8 @@ namespace Pantrymo.Client
             builder.Services.AddScoped<IngredientSuggestionService>();
             builder.Services.AddScoped<RecipeSearchService>();
             builder.Services.AddScoped<IRecipeSearchProvider, EmptyRecipeSearchProvider>();
-            builder.Services.AddScoped<ISearchService<Component>, BasicComponentSearchService>();
-            builder.Services.AddScoped<ISearchService<Cuisine>, BasicCuisineSearchService>();
+            builder.Services.AddScoped<ISearchService<IComponent>, BasicComponentSearchService>();
+            builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>();
 
             return builder.Build();
         }
