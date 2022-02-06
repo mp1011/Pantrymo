@@ -10,9 +10,9 @@
         IQueryable<IRecipe> Recipes { get; }
         IQueryable<IRecipeDetail> RecipesDetail { get; }
 
-        Task InsertAsync(ISite[] records);
-        Task InsertAsync(IComponent[] records);
-        Task InsertAsync(IAlternateComponentName[] records);
+        Task Save(params ISite[] records);
+        Task Save(params IComponent[] records);
+        Task Save(params IAlternateComponentName[] records);
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
 

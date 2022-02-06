@@ -9,8 +9,8 @@ namespace Pantrymo.ServerInfrastructure
 {
     public partial class SqlServerDbContext : BaseDbContext
     {
-        public SqlServerDbContext(ISettingsService settingsService, DbContextOptions<SqlServerDbContext> options)
-          : base(settingsService, options)
+        public SqlServerDbContext(ISettingsService settingsService, IObjectMapper objectMapper, DbContextOptions<SqlServerDbContext> options)
+          : base(settingsService, objectMapper, options)
         {
         }
         public virtual DbSet<ComponentHierarchy> ComponentHierarchies { get; set; }

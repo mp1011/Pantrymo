@@ -7,8 +7,8 @@ namespace Pantrymo.ClientInfrastructure
 {
     public partial class SqliteDbContext : BaseDbContext
     {
-        public SqliteDbContext(ISettingsService settingsService, DbContextOptions<SqliteDbContext> options)
-          : base(settingsService, options)
+        public SqliteDbContext(ISettingsService settingsService, IObjectMapper objectMapper, DbContextOptions<SqliteDbContext> options)
+          : base(settingsService, objectMapper, options)
         {
         }
 

@@ -16,9 +16,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Pantrymo.Domain\Pantrymo.Domain.csproj" />
   </ItemGroup>
-	
-  <ItemGroup>
-    <Folder Include="Models\DTO\" />
-  </ItemGroup>
 
 </Project>

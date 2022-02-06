@@ -69,13 +69,18 @@ namespace Pantrymo.Tests
             if (_testEnvironment == TestEnvironment.Sqlite)
                 return CreateSQLiteContext();
             else
-                return new SqlServerDbContext(CreateSettingsService(), new DbContextOptions<SqlServerDbContext>());
+                return new SqlServerDbContext(CreateSettingsService(), CreateObjectMapper(), new DbContextOptions<SqlServerDbContext>());
         }
 
         private SqliteDbContext _sqliteContext;
         public SqliteDbContext CreateSQLiteContext()
         {
-            return _sqliteContext ?? (_sqliteContext = new SqliteDbContext(CreateSettingsService(), new DbContextOptions<SqliteDbContext>()));
+            return _sqliteContext ?? (_sqliteContext = new SqliteDbContext(CreateSettingsService(),CreateObjectMapper(), new DbContextOptions<SqliteDbContext>()));
+        }
+
+        public IObjectMapper CreateObjectMapper()
+        {
+            return new ReflectionObjectMapper(CreateExceptionHandler());
         }
 
         public IFullHierarchyLoader CreateFullHierarchyLoader()

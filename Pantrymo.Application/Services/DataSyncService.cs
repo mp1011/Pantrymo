@@ -19,9 +19,9 @@ namespace Pantrymo.Application.Services
         {
             return new DataSync[]
             {
-                new DataSync<ISite>(_dataContext.Sites, dateFrom => _dataAccess.GetSites(dateFrom), records => _dataContext.InsertAsync(records)),
-                new DataSync<IComponent>(_dataContext.Components, dateFrom => _dataAccess.GetComponents(dateFrom), records => _dataContext.InsertAsync(records)),
-                new DataSync<IAlternateComponentName>(_dataContext.AlternateComponentNames, dateFrom => _dataAccess.GetAlternateComponentName(dateFrom), records => _dataContext.InsertAsync(records))
+                new DataSync<ISite>(_dataContext.Sites, dateFrom => _dataAccess.GetSites(dateFrom), records => _dataContext.Save(records)),
+                new DataSync<IComponent>(_dataContext.Components, dateFrom => _dataAccess.GetComponents(dateFrom), records => _dataContext.Save(records)),
+                new DataSync<IAlternateComponentName>(_dataContext.AlternateComponentNames, dateFrom => _dataAccess.GetAlternateComponentName(dateFrom), records => _dataContext.Save(records))
             };
         }
       

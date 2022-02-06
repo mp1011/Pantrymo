@@ -24,7 +24,7 @@ namespace Pantrymo.Tests.ServiceTests
             ctx.Sites.Count().Should().Be(0);
 
             var syncService = MockHelper.CreateDataSyncService();
-            MockHelper.MockRemoteSites.AddRange(TestDataCreator.CreateTestSites(10, 1));
+            MockHelper.MockRemoteSites.AddRange(TestDataCreator.CreateTestSites(10));
             var result = await syncService.ImmediateSync();
             result.Should().BeTrue();
             ctx.Sites.Count().Should().BeGreaterThan(0);
