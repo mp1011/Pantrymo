@@ -6,21 +6,52 @@ using Pantrymo.Application.Models.AppModels;
 using Pantrymo.Application.Services;
 using Pantrymo.ClientInfrastructure;
 using Pantrymo.ClientInfrastructure.Services;
+using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services;
 using Pantrymo.ServerInfrastructure;
 using Pantrymo.ServerInfrastructure.Services;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pantrymo.Tests
 {
     internal class MockHelper
     {
         private readonly TestEnvironment _testEnvironment;
-
+        
         public MockHelper(TestEnvironment testEnvironment)
         {
             _testEnvironment = testEnvironment;
+            if(_testEnvironment == TestEnvironment.Sqlite)
+                CopyLocalDBIfNeeded();
+        }
+
+        public List<ISite> MockRemoteSites { get; } = new List<ISite>();
+
+
+        private void CopyLocalDBIfNeeded()
+        {
+            var projectFolder = GetProjectFolder();
+            var testDataFile = new FileInfo($@"{projectFolder.FullName}\TestData\PantrymoDB.db");
+            var originalTestDataFile = new FileInfo($@"{projectFolder.FullName}\TestData\PantrymoDB_Original.db");
+
+            if(!testDataFile.Exists
+                || testDataFile.LastWriteTimeUtc > originalTestDataFile.LastWriteTimeUtc)
+            {
+                testDataFile = originalTestDataFile.CopyTo("PantrymoDB.db", overwrite: true);
+                testDataFile.LastWriteTimeUtc = originalTestDataFile.LastWriteTimeUtc;
+            }
+        }
+
+        private DirectoryInfo GetProjectFolder()
+        {
+            var projectFolder = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
+            while (projectFolder.Name != "Pantrymo.Tests")
+                projectFolder = projectFolder.Parent;
+            return projectFolder;
         }
 
         public IngredientSuggestionService CreateIngredientSuggestionService()
@@ -35,10 +66,16 @@ namespace Pantrymo.Tests
 
         public IDataContext CreateDataContext()
         {
-            if(_testEnvironment == TestEnvironment.Sqlite)
-                return new SqliteDbContext(CreateSettingsService(), new DbContextOptions<SqliteDbContext>());
+            if (_testEnvironment == TestEnvironment.Sqlite)
+                return CreateSQLiteContext();
             else
                 return new SqlServerDbContext(CreateSettingsService(), new DbContextOptions<SqlServerDbContext>());
+        }
+
+        private SqliteDbContext _sqliteContext;
+        public SqliteDbContext CreateSQLiteContext()
+        {
+            return _sqliteContext ?? (_sqliteContext = new SqliteDbContext(CreateSettingsService(), new DbContextOptions<SqliteDbContext>()));
         }
 
         public IFullHierarchyLoader CreateFullHierarchyLoader()
@@ -57,9 +94,7 @@ namespace Pantrymo.Tests
 
         public ISettingsService CreateSettingsService()
         {
-            var projectFolder = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
-            while (projectFolder.Name != "Pantrymo.Tests")
-                projectFolder = projectFolder.Parent;
+            var projectFolder = GetProjectFolder();
            
             var mock = Substitute.For<ISettingsService>();
 
@@ -102,9 +137,36 @@ namespace Pantrymo.Tests
         public IRecipeSearchProvider CreateRecipeSearchProvider()
         {
             if (_testEnvironment == TestEnvironment.Sqlite)
-                return new EmptyRecipeSearchProvider();
+                return new InMemoryRecipeSearchProvider(CreateDataContext());
             else
                 return new DbRecipeSearchProvider(CreateDataContext() as SqlServerDbContext);
+        }
+
+        public DataSyncService CreateDataSyncService()
+        {
+            return new PantrymoDataSyncService(CreateMockRemoteAccess(), CreateDataContext(), CreateExceptionHandler());
+        }
+
+        public IExceptionHandler CreateExceptionHandler() => new FailTestExceptionHandler();
+        
+        public IDataAccess CreateMockRemoteAccess()
+        {
+            var mock = Substitute.For<IDataAccess>();            
+
+            mock.GetAlternateComponentName(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IAlternateComponentName[] { })));
+            mock.GetComponents(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IComponent[] { })));        
+            mock.GetSites(Arg.Any<DateTime>())
+                .ReturnsForAnyArgs(c =>
+                {
+                    var date = c.Arg<DateTime>();
+                    var result = MockRemoteSites
+                        .Where(p => p.LastModified > date)
+                        .ToArray();
+
+                    return Task.FromResult(Result.Success(result));
+                });
+
+            return mock;
         }
     }
 }

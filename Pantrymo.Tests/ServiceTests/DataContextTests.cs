@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Pantrymo.Tests.ServiceTests
 {
-    class DataContextTests : MultiEnvironmentTest
+    class DataContextTests : EnvironmentTest
     {
         public DataContextTests(TestEnvironment testEnvironment) : base(testEnvironment)
         {

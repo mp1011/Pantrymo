@@ -1,16 +1,15 @@
 ﻿using Pantrymo.Application.Models;
-using Pantrymo.Domain.Extensions;
-using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services;
 
 namespace Pantrymo.Application.Services
 {
     public class PantrymoDataSyncService : DataSyncService
     {
-        private readonly RemoteDataAccess _dataAccess;
+        private readonly IDataAccess _dataAccess;
         private readonly IDataContext _dataContext;
 
-        public PantrymoDataSyncService(RemoteDataAccess dataAccess, IDataContext dataContext) 
+        public PantrymoDataSyncService(IDataAccess dataAccess, IDataContext dataContext, IExceptionHandler exceptionHandler) 
+            :base(exceptionHandler)
         {
             _dataAccess = dataAccess;
             _dataContext = dataContext;       

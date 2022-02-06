@@ -5,15 +5,21 @@ namespace Pantrymo.Tests
 
     [TestFixture(TestEnvironment.Sqlite)]
     [TestFixture(TestEnvironment.SqlServer)]
-    abstract class MultiEnvironmentTest
+    abstract class EnvironmentTest 
     {
         private readonly TestEnvironment _testEnvironment;
 
-        protected MockHelper MockHelper { get; }
+        protected MockHelper MockHelper { get; private set; }
 
-        public MultiEnvironmentTest(TestEnvironment testEnvironment)
+        public EnvironmentTest(TestEnvironment testEnvironment)
         {
             _testEnvironment = testEnvironment;
+            MockHelper = new MockHelper(_testEnvironment);
+        }
+
+        [SetUp]
+        public void TestSetup()
+        {
             MockHelper = new MockHelper(_testEnvironment);
         }
     }

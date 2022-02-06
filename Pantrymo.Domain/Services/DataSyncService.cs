@@ -6,8 +6,12 @@ namespace Pantrymo.Domain.Services
     public abstract class DataSyncService
     {
         private readonly TimeSpan _localDataExpiration = TimeSpan.FromMinutes(15);
+        private readonly IExceptionHandler _exceptionHandler;
 
-        private DataSync[] _dataSync;
+        public DataSyncService(IExceptionHandler exceptionHandler)
+        {
+            _exceptionHandler = exceptionHandler;
+        }
 
         protected abstract class DataSync
         {
@@ -54,17 +58,24 @@ namespace Pantrymo.Domain.Services
 
         public void BackgroundSync()
         {
-            _dataSync = SetupDataSync();
-            Task.Run(() => StartBackgroundSync());
+            var dataSync = SetupDataSync();
+            Task.Run(() => StartBackgroundSync(dataSync));
+        }
+
+        public async Task<bool> ImmediateSync()
+        {
+            var dataSync = SetupDataSync();
+            var synced = await TrySync(dataSync).HandleError(_exceptionHandler);
+            return synced;
         }
 
         protected abstract DataSync[] SetupDataSync();
 
-        private async Task StartBackgroundSync()
+        private async Task StartBackgroundSync(DataSync[] dataSync)
         {
             while(true)
             {
-                var synced = await TrySync().DebugLogError();
+                var synced = await TrySync(dataSync).DebugLogError();
                 if (synced)
                     await Task.Delay(TimeSpan.FromMinutes(15)); 
                 else
@@ -72,16 +83,16 @@ namespace Pantrymo.Domain.Services
             }
         }
 
-        private async Task<bool> TrySync()
+        private async Task<bool> TrySync(DataSync[] dataSync)
         {
             bool anyFailed = false;
             bool anySucceeded = false;
 
-            foreach(var sync in _dataSync)
+            foreach(var sync in dataSync)
             {
                 if(sync.LastSuccessfulSync.TimeSince() > _localDataExpiration)
                 {
-                    bool success = await sync.TrySync().DebugLogError();
+                    bool success = await sync.TrySync().HandleError(_exceptionHandler);
                     if (success)
                         anySucceeded = true;
                     if (!success)
@@ -90,7 +101,11 @@ namespace Pantrymo.Domain.Services
             }
 
             if (anySucceeded)
-                await CommitLocalChanges();
+            {
+                var savedLocally = await CommitLocalChanges().CheckSuccess(_exceptionHandler);
+                if (!savedLocally)
+                    return false;
+            }
 
             return !anyFailed;
         }

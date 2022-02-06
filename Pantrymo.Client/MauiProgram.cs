@@ -45,9 +45,10 @@ namespace Pantrymo.Client
             builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
             builder.Services.AddScoped<IngredientSuggestionService>();
             builder.Services.AddScoped<RecipeSearchService>();
-            builder.Services.AddScoped<IRecipeSearchProvider, EmptyRecipeSearchProvider>();
+            builder.Services.AddScoped<IRecipeSearchProvider, InMemoryRecipeSearchProvider>();
             builder.Services.AddScoped<ISearchService<IComponent>, BasicComponentSearchService>();
             builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>();
+            builder.Services.AddScoped<IExceptionHandler, DebugLogExceptionHandler>();
 
             builder.Services.AddScoped<HttpService>();
             builder.Services.AddSingleton(_ => new CustomJsonSerializer(typeof(IRecipe).Assembly, typeof(Recipe).Assembly));

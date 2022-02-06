@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pantrymo.Tests.ServiceTests
 {
-    class RecipeSearchServiceTests : MultiEnvironmentTest
+    class RecipeSearchServiceTests : EnvironmentTest
     {
         public RecipeSearchServiceTests(TestEnvironment testEnvironment) : base(testEnvironment)
         {

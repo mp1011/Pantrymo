@@ -1,4 +1,6 @@
-﻿using Pantrymo.Domain.Models;
+﻿#nullable disable
+using Pantrymo.Domain.Models;
+using Pantrymo.Domain.Services;
 using System.Diagnostics;
 
 namespace Pantrymo.Domain.Extensions
@@ -37,6 +39,21 @@ namespace Pantrymo.Domain.Extensions
             });
         }
 
+        public static Task HandleError(this Task task, IExceptionHandler exceptionHandler)
+            => exceptionHandler.HandleFault(task);
+
+        public static Task<T?> HandleError<T>(this Task<T?> task, IExceptionHandler exceptionHandler)
+            => exceptionHandler.HandleFault(task);
+
+        public static Task HandleError(this Task task, Action<Exception> onError)
+        {
+            return task.ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                    onError(t.Exception);
+            });
+        }
+
         public static Task<T> HandleError<T>(this Task<T> task, Func<Exception,T> onError)
         {
             return task.ContinueWith(t =>
@@ -60,8 +77,21 @@ namespace Pantrymo.Domain.Extensions
             {
                 if (t.IsFaulted)
                 {
-                    Debug.WriteLine(t.Exception.Message);
-                    Debug.WriteLine(t.Exception.StackTrace);
+                    Debug.WriteLine(t.Exception.GetFriendlyString());
+                    return false;
+                }
+
+                return true;
+            });
+        }
+
+        public static Task<bool> CheckSuccess(this Task task, IExceptionHandler exceptionHandler)
+        {
+            return task.ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    exceptionHandler.Handle(t.Exception);
                     return false;
                 }
 
@@ -74,8 +104,7 @@ namespace Pantrymo.Domain.Extensions
         {
             return task.HandleError(ex =>
             {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
+                Debug.WriteLine(ex.GetFriendlyString());
                 return default;
             });
         }
@@ -88,8 +117,7 @@ namespace Pantrymo.Domain.Extensions
                 {
                     var color = Console.ForegroundColor;
 
-                    Debug.WriteLine(t.Exception?.Message);
-                    Debug.WriteLine(t.Exception?.StackTrace);
+                    Debug.WriteLine(t.Exception.GetFriendlyString());
                 }
             });
         }
