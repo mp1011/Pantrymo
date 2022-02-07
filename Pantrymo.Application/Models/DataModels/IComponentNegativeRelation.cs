@@ -3,7 +3,7 @@ using Pantrymo.Domain.Models;
 
 namespace Pantrymo.Application.Models
 {
-    public interface IComponentNegativeRelation: IWithId
+    public interface IComponentNegativeRelation: IWithId, IWithLastModifiedDate
     {
         int ComponentId { get; set; }
         int NegativeComponentId { get; set; }

@@ -23,6 +23,9 @@ namespace Pantrymo.SqlInfrastructure
         public string GetQueryString<T>(IQueryable<T> query) => query.ToQueryString();
 
         #region IQueryables
+
+        IQueryable<IAuthor> IDataContext.Authors => Authors;
+        IQueryable<IComponentNegativeRelation> IDataContext.ComponentNegativeRelations => ComponentNegativeRelations;
         IQueryable<ISite> IDataContext.Sites => Sites;
         IQueryable<IComponent> IDataContext.Components => Components;
         IQueryable<IComponentDetail> IDataContext.ComponentsDetail => Components
@@ -61,6 +64,9 @@ namespace Pantrymo.SqlInfrastructure
         public async Task Save(params ISite[] records) => await Save(records, Sites);
         public async Task Save(params IComponent[] records) => await Save(records, Components);
         public async Task Save(params IAlternateComponentName[] records) => await Save(records, AlternateComponentNames);
+        public async Task Save(params IAuthor[] records) => await Save(records, Authors);
+        public async Task Save(params ICuisine[] records) => await Save(records, Cuisines);
+        public async Task Save(params IComponentNegativeRelation[] records) => await Save(records, ComponentNegativeRelations);
 
         private async Task Save<TInterface,TModel>(TInterface[] records, DbSet<TModel> dataSet)
             where TInterface : IWithId, IWithLastModifiedDate

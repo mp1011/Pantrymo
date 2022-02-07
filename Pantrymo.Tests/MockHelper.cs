@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using NUnit.Framework;
 using Pantrymo.Application.Models;
@@ -149,7 +150,12 @@ namespace Pantrymo.Tests
 
         public DataSyncService CreateDataSyncService()
         {
-            return new PantrymoDataSyncService(CreateMockRemoteAccess(), CreateDataContext(), CreateExceptionHandler());
+            return new PantrymoDataSyncService(CreateMediator(), CreateMockRemoteAccess(), CreateDataContext(), CreateExceptionHandler());
+        }
+
+        public IMediator CreateMediator()
+        {
+            return Substitute.For<IMediator>();
         }
 
         public IExceptionHandler CreateExceptionHandler() => new FailTestExceptionHandler();
@@ -159,7 +165,11 @@ namespace Pantrymo.Tests
             var mock = Substitute.For<IDataAccess>();            
 
             mock.GetAlternateComponentName(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IAlternateComponentName[] { })));
-            mock.GetComponents(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IComponent[] { })));        
+            mock.GetComponents(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IComponent[] { })));
+            mock.GetAuthors(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IAuthor[] { })));
+            mock.GetComponentNegativeRelations(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IComponentNegativeRelation[] { })));
+            mock.GetCuisines(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new ICuisine[] { })));
+              
             mock.GetSites(Arg.Any<DateTime>())
                 .ReturnsForAnyArgs(c =>
                 {

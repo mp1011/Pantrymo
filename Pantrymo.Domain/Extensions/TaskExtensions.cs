@@ -1,5 +1,4 @@
-﻿#nullable disable
-using Pantrymo.Domain.Models;
+﻿using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services;
 using System.Diagnostics;
 
@@ -7,14 +6,23 @@ namespace Pantrymo.Domain.Extensions
 {
     public static class TaskExtensions
     {
-
-        public static Task<Result<T>> AsResult<T>(this Task<T> task)
-            where T:class,new()
+        public static Task<Result<bool>> AsResult(this Task task)
         {
             return task.ContinueWith(t =>
             {
                 if (t.IsFaulted)
-                    return Result.Failure(t.Result ?? new T());
+                    return Result.Failure(t.Exception ?? new Exception("unknown error"), false);
+                else
+                    return Result.Success(true);
+            });
+        }
+
+        public static Task<Result<T?>> AsResult<T>(this Task<T?> task)
+        {
+            return task.ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                    return Result.Failure<T>(t.Exception ?? new Exception("unknown error"));
                 else 
                     return Result.Success(t.Result);
             });
@@ -25,7 +33,7 @@ namespace Pantrymo.Domain.Extensions
             return task.ContinueWith(t =>
             {
                 if (t.IsFaulted)
-                    return Result.Failure(t.Result ?? new T[] { });
+                    return Result.Failure(t.Exception, t.Result ?? new T[] { });
                 else
                     return Result.Success(t.Result);
             });
@@ -50,7 +58,7 @@ namespace Pantrymo.Domain.Extensions
             return task.ContinueWith(t =>
             {
                 if (t.IsFaulted)
-                    onError(t.Exception);
+                    onError(t.Exception ?? new Exception("unknown error"));
             });
         }
 

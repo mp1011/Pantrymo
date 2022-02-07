@@ -1,0 +1,35 @@
+﻿@using MediatR
+@using static Pantrymo.Application.Features.DataSyncFeature
+
+@implements INotificationHandler<SyncStatusChanged>
+<h3>SyncStatus</h3>
+
+<ol>
+    @foreach(var text in Updates)
+    {
+        <li>@text</li>
+    }
+</ol>
+
+@code 
+{
+    private static SyncStatus _activePage;
+
+    protected override void OnInitialized()
+    {
+        _activePage = this;
+    }
+
+    List<string> Updates = new List<string>();
+
+    public async Task Handle(SyncStatusChanged notification, CancellationToken cancellationToken)
+    {
+        if (_activePage != null && _activePage != this)
+            await _activePage.InvokeAsync(async () => await _activePage.Handle(notification, cancellationToken));
+        else
+        {
+            Updates.Add($"Sync {notification.ModelType} Success={notification.Status.Succeeded}");
+            StateHasChanged();
+        }
+    }
+}

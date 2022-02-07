@@ -31,7 +31,7 @@ namespace Pantrymo.Client
             
 
             builder.Services.AddBlazorWebView();
-            builder.Services.AddMediatR(typeof(CategoryTreeFeature));
+            builder.Services.AddMediatR(typeof(CategoryTreeFeature), typeof(MauiProgram));
             builder.Services.AddDbContext<IDataContext, SqliteDbContext>();
             builder.Services.AddScoped<IDataAccess, RemoteDataAccessWithLocalFallback>();
             builder.Services.AddScoped<RemoteDataAccess>();
@@ -49,6 +49,7 @@ namespace Pantrymo.Client
             builder.Services.AddScoped<ISearchService<IComponent>, BasicComponentSearchService>();
             builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>();
             builder.Services.AddScoped<IExceptionHandler, DebugLogExceptionHandler>();
+            builder.Services.AddScoped<IObjectMapper, ReflectionObjectMapper>();
 
             builder.Services.AddScoped<HttpService>();
             builder.Services.AddSingleton(_ => new CustomJsonSerializer(typeof(IRecipe).Assembly, typeof(Recipe).Assembly));

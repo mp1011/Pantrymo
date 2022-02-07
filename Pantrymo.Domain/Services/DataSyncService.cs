@@ -1,59 +1,17 @@
 ﻿using Pantrymo.Domain.Extensions;
-using Pantrymo.Domain.Models;
+using Pantrymo.Domain.Services.Sync;
 
 namespace Pantrymo.Domain.Services
 {
     public abstract class DataSyncService
     {
-        private readonly TimeSpan _localDataExpiration = TimeSpan.FromMinutes(15);
-        private readonly IExceptionHandler _exceptionHandler;
 
-        public DataSyncService(IExceptionHandler exceptionHandler)
+        private readonly TimeSpan _localDataExpiration = TimeSpan.FromMinutes(15);
+        protected readonly IExceptionHandler _exceptionHandler;
+
+        protected DataSyncService(IExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
-        }
-
-        protected abstract class DataSync
-        {
-            public abstract Task<bool> TrySync();
-
-            public DateTime LastSuccessfulSync { get; protected set; } = DateTime.MinValue;
-        }
-
-        protected class DataSync<T> : DataSync
-            where T:IWithLastModifiedDate
-        {
-            public IQueryable<T> LocalQuery { get; }
-            public Func<DateTime, Task<Result<T[]>>> GetNewFromServer;
-            public Func<T[], Task> InsertRecords;
-
-            public DataSync(IQueryable<T> localQuery, Func<DateTime, Task<Result<T[]>>> getNewFromServer, Func<T[], Task> insertRecords)
-            {
-                LocalQuery = localQuery;
-                GetNewFromServer = getNewFromServer;
-                InsertRecords = insertRecords;
-            }
-
-            public override async Task<bool> TrySync()
-            {
-                var localLastModified = LocalQuery.GetLatestModifiedDate();
-                var newFromServer = await GetNewFromServer(localLastModified);
-                if (newFromServer.Failure)
-                    return false;
-
-                if (newFromServer.Data.Any())
-                {
-                    var success = await InsertRecords(newFromServer.Data)
-                                        .CheckSuccess();
-
-                    if (!success)
-                        return false;
-
-                }
-
-                LastSuccessfulSync = DateTime.Now;
-                return true;
-            }
         }
 
         public void BackgroundSync()
@@ -69,9 +27,9 @@ namespace Pantrymo.Domain.Services
             return synced;
         }
 
-        protected abstract DataSync[] SetupDataSync();
+        protected abstract DataTypeSync[] SetupDataSync();
 
-        private async Task StartBackgroundSync(DataSync[] dataSync)
+        private async Task StartBackgroundSync(DataTypeSync[] dataSync)
         {
             while(true)
             {
@@ -83,7 +41,7 @@ namespace Pantrymo.Domain.Services
             }
         }
 
-        private async Task<bool> TrySync(DataSync[] dataSync)
+        private async Task<bool> TrySync(DataTypeSync[] dataSync)
         {
             bool anyFailed = false;
             bool anySucceeded = false;
@@ -93,6 +51,8 @@ namespace Pantrymo.Domain.Services
                 if(sync.LastSuccessfulSync.TimeSince() > _localDataExpiration)
                 {
                     bool success = await sync.TrySync().HandleError(_exceptionHandler);
+                    OnSyncStatusChanged(sync);
+
                     if (success)
                         anySucceeded = true;
                     if (!success)
@@ -109,6 +69,8 @@ namespace Pantrymo.Domain.Services
 
             return !anyFailed;
         }
+
+        protected abstract void OnSyncStatusChanged(DataTypeSync dataTypeSync);
 
         protected abstract Task CommitLocalChanges();
     }

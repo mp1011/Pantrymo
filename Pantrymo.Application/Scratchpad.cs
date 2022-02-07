@@ -1,6 +1,7 @@
-﻿namespace Pantrymo.Application
+﻿using MediatR;
+
+namespace Pantrymo.Application
 {
-   
 
 
 }

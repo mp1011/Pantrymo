@@ -1,5 +1,8 @@
 ﻿#nullable disable
 
+using Pantrymo.Domain.Models;
+using Pantrymo.Domain.Services;
+
 namespace Pantrymo.Domain.Extensions
 {
     public static class ExceptionExtensions

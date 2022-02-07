@@ -1,0 +1,79 @@
+﻿@using MediatR
+@using System
+@using Pantrymo.Application.Features
+@using Pantrymo.Application.Models
+@using Pantrymo.Application.Models.AppModels
+
+
+@inject IMediator _mediator;
+
+<input id="IngredientTextInput" @bind="IngredientText" @bind:event="oninput" @onkeyup="IngredientText_OnKeyUp" />
+<ul class="list-group">
+    @foreach(var ingredient in _ingredientSuggestions)
+    {
+        <li class="list-group-item list-group-item-light list-group-item-action" 
+            data-value=@ingredient
+            @onclick="()=> IngredientSuggestionClick(ingredient)">@ingredient</li>
+    }
+</ul>
+
+<ul>
+    @foreach(var result in _searchResults)
+    {
+        <li>@result.Title</li>
+    }
+</ul>
+
+@code
+{
+    private CancellationTokenSource _tokenSource = new CancellationTokenSource();    
+    string IngredientText { get; set; }
+
+    private string[] _ingredientSuggestions = new string[] { };
+    private IRecipe[] _searchResults = new IRecipe[] { };
+
+    public async void IngredientText_OnKeyUp(KeyboardEventArgs args)
+    {
+        await SuggestIngredients();
+    }
+
+    public async void IngredientSuggestionClick(string ingredient)
+    {
+        IngredientText = ingredient;
+        await DoRecipeSearch();
+    }
+
+    private async Task SuggestIngredients()
+    {
+        var suggestions = await _mediator.Send(new SuggestIngredientsFeature.Query(IngredientText,5));
+        _ingredientSuggestions = suggestions;
+        StateHasChanged();
+    }
+
+    private async Task DoRecipeSearch()
+    {
+        if(_tokenSource != null)
+            _tokenSource.Cancel();
+
+        _tokenSource = new CancellationTokenSource();
+        await DoRecipeSearch(_tokenSource.Token);
+        _tokenSource = null;
+    }
+
+    private async Task DoRecipeSearch(CancellationToken cancellationToken)
+    {
+        System.Diagnostics.Debug.WriteLine("DRS BEGIN");
+        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+        if (cancellationToken.IsCancellationRequested)
+            return;
+
+        System.Diagnostics.Debug.WriteLine("DRS SEND");
+        var results = await _mediator.Send(new RecipeSearchFeature.Query(new string[]{IngredientText}, new string[]{"Italian"},0,10));
+        if (cancellationToken.IsCancellationRequested)
+            return;
+            
+        System.Diagnostics.Debug.WriteLine("DRS END");
+        _searchResults = results;
+        StateHasChanged(); 
+    }
+}

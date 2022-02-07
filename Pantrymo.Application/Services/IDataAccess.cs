@@ -10,6 +10,9 @@ namespace Pantrymo.Application.Services
         Task<Result<ISite[]>> GetSites(DateTime from);
         Task<Result<IComponent[]>> GetComponents(DateTime from);
         Task<Result<IAlternateComponentName[]>> GetAlternateComponentName(DateTime from);
+        Task<Result<IAuthor[]>> GetAuthors(DateTime from);
+        Task<Result<ICuisine[]>> GetCuisines(DateTime from);
+        Task<Result<IComponentNegativeRelation[]>> GetComponentNegativeRelations(DateTime from);
     }
 
     public class LocalDataAccess : IDataAccess
@@ -29,6 +32,15 @@ namespace Pantrymo.Application.Services
 
         public async Task<Result<IAlternateComponentName[]>> GetAlternateComponentName(DateTime from) 
             => await _dataContext.AlternateComponentNames.GetByDateAsync(from);
+
+        public async Task<Result<IAuthor[]>> GetAuthors(DateTime from)
+            => await _dataContext.Authors.GetByDateAsync(from);
+
+        public async Task<Result<ICuisine[]>> GetCuisines(DateTime from)
+            => await _dataContext.Cuisines.GetByDateAsync(from);
+
+        public async Task<Result<IComponentNegativeRelation[]>> GetComponentNegativeRelations(DateTime from)
+            => await _dataContext.ComponentNegativeRelations.GetByDateAsync(from);
     }
 
     public class RemoteDataAccess : IDataAccess
@@ -56,7 +68,12 @@ namespace Pantrymo.Application.Services
         public async Task<Result<IComponent[]>> GetComponents(DateTime from) => await GetRecords<IComponent>(from);
 
         public async Task<Result<IAlternateComponentName[]>> GetAlternateComponentName(DateTime from) => await GetRecords<IAlternateComponentName>(from);
-       
+
+        public async Task<Result<IAuthor[]>> GetAuthors(DateTime from) => await GetRecords<IAuthor>(from);
+
+        public async Task<Result<ICuisine[]>> GetCuisines(DateTime from) => await GetRecords<ICuisine>(from);
+
+        public async Task<Result<IComponentNegativeRelation[]>> GetComponentNegativeRelations(DateTime from) => await GetRecords<IComponentNegativeRelation>(from);
     }
 
     public class RemoteDataAccessWithLocalFallback : IDataAccess
@@ -96,5 +113,13 @@ namespace Pantrymo.Application.Services
         public async Task<Result<IAlternateComponentName[]>> GetAlternateComponentName(DateTime from) 
             => await GetData(_webAPI.GetAlternateComponentName(from), _fallbackAPI.GetAlternateComponentName(from));
 
+        public async Task<Result<IAuthor[]>> GetAuthors(DateTime from)
+            => await GetData(_webAPI.GetAuthors(from), _fallbackAPI.GetAuthors(from));
+
+        public async Task<Result<ICuisine[]>> GetCuisines(DateTime from)
+            => await GetData(_webAPI.GetCuisines(from), _fallbackAPI.GetCuisines(from));
+
+        public async Task<Result<IComponentNegativeRelation[]>> GetComponentNegativeRelations(DateTime from)
+            => await GetData(_webAPI.GetComponentNegativeRelations(from), _fallbackAPI.GetComponentNegativeRelations(from));
     }
 }

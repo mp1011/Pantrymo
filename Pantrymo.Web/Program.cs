@@ -27,6 +27,7 @@ builder.Services.AddScoped<IRecipeSearchProvider, DbRecipeSearchProvider>();
 builder.Services.AddScoped<ISearchService<IComponent>, BasicComponentSearchService>();
 builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>();
 builder.Services.AddScoped<IExceptionHandler, DebugLogExceptionHandler>();
+builder.Services.AddScoped<IObjectMapper, ReflectionObjectMapper>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

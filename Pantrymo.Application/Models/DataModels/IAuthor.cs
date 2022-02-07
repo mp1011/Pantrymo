@@ -3,7 +3,7 @@ using Pantrymo.Domain.Models;
 
 namespace Pantrymo.Application.Models
 {
-    public interface IAuthor : IWithName, IWithId
+    public interface IAuthor : IWithName, IWithId, IWithLastModifiedDate
     {
     }
 }
