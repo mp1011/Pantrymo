@@ -7,6 +7,7 @@ using Pantrymo.Application.Services;
 using Pantrymo.ClientInfrastructure;
 using Pantrymo.ClientInfrastructure.Services;
 using Pantrymo.Domain.Services;
+using static Pantrymo.Application.Features.DataSyncFeature;
 
 namespace Pantrymo.Client
 {
@@ -31,7 +32,7 @@ namespace Pantrymo.Client
             
 
             builder.Services.AddBlazorWebView();
-            builder.Services.AddMediatR(typeof(CategoryTreeFeature), typeof(MauiProgram));
+            builder.Services.AddMediatR(typeof(CategoryTreeFeature));
             builder.Services.AddDbContext<IDataContext, SqliteDbContext>();
             builder.Services.AddScoped<IDataAccess, RemoteDataAccessWithLocalFallback>();
             builder.Services.AddScoped<RemoteDataAccess>();
@@ -50,6 +51,7 @@ namespace Pantrymo.Client
             builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>();
             builder.Services.AddScoped<IExceptionHandler, DebugLogExceptionHandler>();
             builder.Services.AddScoped<IObjectMapper, ReflectionObjectMapper>();
+            builder.Services.AddSingleton<NotificationDispatcher<SyncStatusChanged>>();
 
             builder.Services.AddScoped<HttpService>();
             builder.Services.AddSingleton(_ => new CustomJsonSerializer(typeof(IRecipe).Assembly, typeof(Recipe).Assembly));

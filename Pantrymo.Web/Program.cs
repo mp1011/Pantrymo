@@ -5,6 +5,7 @@ using Pantrymo.Application.Services;
 using Pantrymo.Domain.Services;
 using Pantrymo.ServerInfrastructure;
 using Pantrymo.ServerInfrastructure.Services;
+using static Pantrymo.Application.Features.DataSyncFeature;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ builder.Services.AddScoped<ISearchService<IComponent>, BasicComponentSearchServi
 builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>();
 builder.Services.AddScoped<IExceptionHandler, DebugLogExceptionHandler>();
 builder.Services.AddScoped<IObjectMapper, ReflectionObjectMapper>();
+builder.Services.AddScoped<NotificationDispatcher<SyncStatusChanged>>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
