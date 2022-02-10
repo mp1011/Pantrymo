@@ -1,5 +1,11 @@
-﻿namespace Pantrymo.Domain.Services.Sync
+﻿using MediatR;
+
+namespace Pantrymo.Domain.Models
 {
+    public record SyncTypeStatus(Type ModelType, SyncStatus Status) : INotification
+    {
+    }
+    
     public record class SyncStatus(DateTime LastSuccessfulSync, DateTime LastFailedSync, Exception? LastFailure, int RecordSyncCount)
     {
         public DateTime LastUpdated => Succeeded ? LastSuccessfulSync : LastFailedSync;

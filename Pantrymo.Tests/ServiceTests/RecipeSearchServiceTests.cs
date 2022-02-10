@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace Pantrymo.Tests.ServiceTests
 {
+    [TestFixture(TestEnvironment.Sqlite)]
+    [TestFixture(TestEnvironment.SqlServer)]
     class RecipeSearchServiceTests : EnvironmentTest
     {
         public RecipeSearchServiceTests(TestEnvironment testEnvironment) : base(testEnvironment)

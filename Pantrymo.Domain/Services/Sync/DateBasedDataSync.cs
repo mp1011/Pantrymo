@@ -8,20 +8,20 @@ namespace Pantrymo.Domain.Services.Sync
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class DateBasedDataSync<T> : DataTypeSync<T>
-       where T : IWithLastModifiedDate
+       where T : class, IWithId, IWithLastModifiedDate
     {
-        private Func<DateTime, Task<Result<T[]>>> _getNewFromServer;
+        private readonly IDataAccess _dataAccess;
 
-        public DateBasedDataSync(IExceptionHandler exceptionHandler, IQueryable<T> localQuery, Func<DateTime, Task<Result<T[]>>> getNewFromServer, Func<T[], Task> insertRecords)
-            : base(exceptionHandler, localQuery, insertRecords)
+        public DateBasedDataSync(IExceptionHandler exceptionHandler, IBaseDataContext dataContext, IDataAccess dataAccess)
+            : base(exceptionHandler, dataContext)
         {
-            _getNewFromServer = getNewFromServer;
+            _dataAccess = dataAccess.CheckNotNull();
         }
 
         protected override async Task<Result<T[]>> GetUpdatedRecordsFromServer()
         {
-            var localLastModified = LocalQuery.GetLatestModifiedDate();
-            return await _getNewFromServer(localLastModified);
+            var localLastModified = _dataContext.GetQuery<T>().GetLatestModifiedDate();
+            return await _dataAccess.GetRecordsByDate<T>(localLastModified);
         }
     }
 }

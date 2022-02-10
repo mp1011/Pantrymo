@@ -2,9 +2,8 @@
 
 using Pantrymo.Domain.Extensions;
 using Pantrymo.Domain.Models;
-using Pantrymo.Domain.Services;
 
-namespace Pantrymo.Application.Services
+namespace Pantrymo.Domain.Services
 {
     public class HttpService
     {

@@ -12,6 +12,8 @@ namespace Pantrymo.ClientInfrastructure
         {
         }
 
+        protected override bool AllowIdentityInsert => true;
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

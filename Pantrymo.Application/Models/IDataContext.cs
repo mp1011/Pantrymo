@@ -1,6 +1,8 @@
-﻿namespace Pantrymo.Application.Models
+﻿using Pantrymo.Domain.Models;
+
+namespace Pantrymo.Application.Models
 {
-    public interface IDataContext
+    public interface IDataContext : IBaseDataContext
     {
         IQueryable<ISite> Sites { get; }
         IQueryable<IComponent> Components { get; }
@@ -18,10 +20,5 @@
         Task Save(params IAuthor[] records);
         Task Save(params ICuisine[] records);
         Task Save(params IComponentNegativeRelation[] records);
-
-
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
-
-        string GetQueryString<T>(IQueryable<T> query);
     }
 }

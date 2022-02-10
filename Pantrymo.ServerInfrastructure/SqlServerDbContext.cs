@@ -13,6 +13,8 @@ namespace Pantrymo.ServerInfrastructure
           : base(settingsService, objectMapper, options)
         {
         }
+        protected override bool AllowIdentityInsert => false;
+
         public virtual DbSet<ComponentHierarchy> ComponentHierarchies { get; set; }
         public virtual DbSet<CuisineHierarchy> CuisineHierarchies { get; set; }
 

@@ -148,7 +148,7 @@ namespace Pantrymo.Tests
                 return new DbRecipeSearchProvider(CreateDataContext() as SqlServerDbContext);
         }
 
-        public DataSyncService CreateDataSyncService()
+        public IDataSyncService CreateDataSyncService()
         {
             return new PantrymoDataSyncService(CreateMediator(), CreateMockRemoteAccess(), CreateDataContext(), CreateExceptionHandler());
         }
@@ -162,15 +162,15 @@ namespace Pantrymo.Tests
         
         public IDataAccess CreateMockRemoteAccess()
         {
-            var mock = Substitute.For<IDataAccess>();            
+            var mock = Substitute.For<IDataAccess>();
 
-            mock.GetAlternateComponentName(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IAlternateComponentName[] { })));
-            mock.GetComponents(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IComponent[] { })));
-            mock.GetAuthors(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IAuthor[] { })));
-            mock.GetComponentNegativeRelations(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IComponentNegativeRelation[] { })));
-            mock.GetCuisines(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new ICuisine[] { })));
-              
-            mock.GetSites(Arg.Any<DateTime>())
+            mock.GetRecordsByDate<IAlternateComponentName>(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IAlternateComponentName[] { })));
+            mock.GetRecordsByDate<IComponent>(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IComponent[] { })));
+            mock.GetRecordsByDate<IAuthor>(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IAuthor[] { })));
+            mock.GetRecordsByDate<IComponentNegativeRelation>(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IComponentNegativeRelation[] { })));
+            mock.GetRecordsByDate<ICuisine>(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new ICuisine[] { })));
+
+            mock.GetRecordsByDate<ISite>(Arg.Any<DateTime>())
                 .ReturnsForAnyArgs(c =>
                 {
                     var date = c.Arg<DateTime>();

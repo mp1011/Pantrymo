@@ -1,9 +1,12 @@
 ﻿using NUnit.Framework;
+using Pantrymo.Domain.Models;
 using System.Diagnostics;
 using System.Linq;
 
 namespace Pantrymo.Tests.ServiceTests
 {
+    [TestFixture(TestEnvironment.Sqlite)]
+    [TestFixture(TestEnvironment.SqlServer)]
     class DataContextTests : EnvironmentTest
     {
         public DataContextTests(TestEnvironment testEnvironment) : base(testEnvironment)

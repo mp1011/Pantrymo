@@ -4,6 +4,7 @@ using Pantrymo.Application.Models;
 using Pantrymo.Domain.Extensions;
 using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services;
+using System.Reflection;
 
 namespace Pantrymo.SqlInfrastructure
 {
@@ -11,17 +12,51 @@ namespace Pantrymo.SqlInfrastructure
     {
         protected readonly ISettingsService _settingsService;
         private readonly IObjectMapper _objectMapper;
+        private readonly Dictionary<Type, MethodInfo> _queryProperties = new Dictionary<Type, MethodInfo>();
+        private readonly Dictionary<Type, MethodInfo> _saveMethods = new Dictionary<Type, MethodInfo>();
+
+        protected abstract bool AllowIdentityInsert { get; }
 
         public BaseDbContext(ISettingsService settingsService, IObjectMapper objectMapper, DbContextOptions options)
           : base(options)
         {
             _settingsService = settingsService;
             _objectMapper = objectMapper;
+            FillTypedProperties();
         }
 
         public string GetQueryString<T>(IQueryable<T> query) => query.ToQueryString();
 
+
+        private void FillTypedProperties()
+        {
+            foreach(var method in GetType().GetInterfaceMap(typeof(IDataContext)).TargetMethods)
+            {
+                if ((method.ReturnType.IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(IQueryable<>)))
+                {
+                    var genericParam = method.ReturnType.GetGenericArguments()[0];
+                    _queryProperties.Add(genericParam, method);
+                }
+
+                if(method.Name == nameof(Save))
+                {
+                    var parameters = method.GetParameters();
+                    if(parameters.Length == 1 && parameters[0].ParameterType.IsArray)
+                        _saveMethods.Add(parameters[0].ParameterType.GetElementType(), method);
+                }
+            }
+        }
+
         #region IQueryables
+
+        public IQueryable<T> GetQuery<T>()
+        {
+            var queryProperty = _queryProperties.GetValueOrDefault(typeof(T));
+            if (queryProperty == null)
+                throw new NotSupportedException($"No Query for {typeof(T).Name} is defined on this data context");
+
+            return (IQueryable<T>)queryProperty.Invoke(this, new object[] { });
+        }
 
         IQueryable<IAuthor> IDataContext.Authors => Authors;
         IQueryable<IComponentNegativeRelation> IDataContext.ComponentNegativeRelations => ComponentNegativeRelations;
@@ -60,6 +95,17 @@ namespace Pantrymo.SqlInfrastructure
 
         #region Saving
 
+        public async Task Save<T>(params T[] records) where T: IWithId, IWithLastModifiedDate
+        {
+            var saveMethod = _saveMethods.GetValueOrDefault(typeof(T));
+            if (saveMethod == null)
+                throw new NotSupportedException($"There is no save method defined for {typeof(T).Name}[]");
+
+            var result = saveMethod.Invoke(this, new object[] { records }) as Task;
+            if (result != null)
+                await result;
+        }
+
         public async Task Save(params ISite[] records) => await Save(records, Sites);
         public async Task Save(params IComponent[] records) => await Save(records, Components);
         public async Task Save(params IAlternateComponentName[] records) => await Save(records, AlternateComponentNames);
@@ -85,11 +131,17 @@ namespace Pantrymo.SqlInfrastructure
 
             var idsToUpdate = oldRecords.Select(x => x.Id).ToArray();
 
-            var serverRecorsdToUpdate = dataSet
+            var serverRecordsToUpdate = dataSet
                 .Where(p=> idsToUpdate.Contains(p.Id))
                 .ToArray();
 
-            foreach(var serverRecord in serverRecorsdToUpdate)
+            if(AllowIdentityInsert)
+            {
+                var idsUpdated = serverRecordsToUpdate.Select(x => x.Id).ToArray();
+                await dataSet.AddRangeAsync(oldRecords.Where(p=> !idsUpdated.Contains(p.Id)));
+            }
+
+            foreach(var serverRecord in serverRecordsToUpdate)
             {
                 var changedRecord = oldRecords.First(x => x.Id == serverRecord.Id);
                 _objectMapper.CopyAllProperties(changedRecord, serverRecord);

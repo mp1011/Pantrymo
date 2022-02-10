@@ -3,8 +3,7 @@
 namespace Pantrymo.Tests
 {
 
-    [TestFixture(TestEnvironment.Sqlite)]
-    [TestFixture(TestEnvironment.SqlServer)]
+
     abstract class EnvironmentTest 
     {
         private readonly TestEnvironment _testEnvironment;

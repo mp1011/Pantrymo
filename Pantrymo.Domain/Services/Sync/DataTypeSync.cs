@@ -20,19 +20,17 @@ namespace Pantrymo.Domain.Services.Sync
     /// Specifies logic for syncing a particular type of data between client and server
     /// </summary>
     public abstract class DataTypeSync<T> : DataTypeSync
+        where T:class, IWithId, IWithLastModifiedDate
     {
-        private readonly IExceptionHandler _exceptionHandler;
-
-        public IQueryable<T> LocalQuery { get; }
-        public Func<T[], Task> InsertRecords;
-
+        protected readonly IExceptionHandler _exceptionHandler;
+        protected readonly IBaseDataContext _dataContext;
+        
         public override Type ModelType => typeof(T);
 
-        public DataTypeSync(IExceptionHandler exceptionHandler, IQueryable<T> localQuery, Func<T[], Task> insertRecords)
+        public DataTypeSync(IExceptionHandler exceptionHandler, IBaseDataContext dataContext)
         {
             _exceptionHandler = exceptionHandler;
-            LocalQuery = localQuery;
-            InsertRecords = insertRecords;
+            _dataContext = dataContext;
         }
 
         protected abstract Task<Result<T[]>> GetUpdatedRecordsFromServer();
@@ -49,7 +47,7 @@ namespace Pantrymo.Domain.Services.Sync
 
             if (updatedFromServer.Data != null && updatedFromServer.Data.Any())
             {
-                var insertResult = await InsertRecords(updatedFromServer.Data)
+                var insertResult = await _dataContext.Save<T>(updatedFromServer.Data)
                                         .AsResult()
                                         .HandleError(_exceptionHandler);
 

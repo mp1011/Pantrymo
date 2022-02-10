@@ -3,23 +3,6 @@ using System.Collections.Concurrent;
 
 namespace Pantrymo.Domain.Services
 {
-
-    public abstract class BaseNotificationHandler<T> : INotificationHandler<T>
-        where T: INotification
-    {
-        private readonly NotificationDispatcher<T> _dispatcher;
-
-        public BaseNotificationHandler(NotificationDispatcher<T> dispatcher)
-        {
-            _dispatcher = dispatcher;
-        }
-
-        public async Task Handle(T notification, CancellationToken cancellationToken)
-        {
-            await _dispatcher.DispatchEvent(notification, cancellationToken);
-        }
-    }
-
     public class NotificationDispatcher<T>
         where T: INotification
     {

@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 
 namespace Pantrymo.Tests.ServiceTests
 {
-
+    [TestFixture(TestEnvironment.Sqlite)]
+    [TestFixture(TestEnvironment.SqlServer)]
     class IngredientSuggestionServiceTests : EnvironmentTest
     {
         public IngredientSuggestionServiceTests(TestEnvironment testEnvironment) : base(testEnvironment)

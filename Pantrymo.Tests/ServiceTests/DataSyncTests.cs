@@ -24,7 +24,23 @@ namespace Pantrymo.Tests.ServiceTests
             ctx.Sites.Count().Should().Be(0);
 
             var syncService = MockHelper.CreateDataSyncService();
-            MockHelper.MockRemoteSites.AddRange(TestDataCreator.CreateTestSites(10));
+            MockHelper.MockRemoteSites.AddRange(TestDataCreator.CreateTestSites(10, assignIds:false));
+            var result = await syncService.ImmediateSync();
+            result.Should().BeTrue();
+            ctx.Sites.Count().Should().BeGreaterThan(0);
+        }
+
+        [TestCase]
+        public async Task CanSyncRecordsWithIdsIntoEmptyDatabase()
+        {
+            var ctx = MockHelper.CreateSQLiteContext();
+            ctx.Sites.RemoveRange(ctx.Sites);
+            ctx.SaveChanges();
+
+            ctx.Sites.Count().Should().Be(0);
+
+            var syncService = MockHelper.CreateDataSyncService();
+            MockHelper.MockRemoteSites.AddRange(TestDataCreator.CreateTestSites(10, assignIds:true));
             var result = await syncService.ImmediateSync();
             result.Should().BeTrue();
             ctx.Sites.Count().Should().BeGreaterThan(0);

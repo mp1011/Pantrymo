@@ -1,39 +1,87 @@
-﻿@using MediatR
+﻿@page "/SyncStatus"
+
+@using MediatR
+@using Pantrymo.Application.Features
+@using Pantrymo.Domain.Extensions
+@using Pantrymo.Domain.Models
 @using Pantrymo.Domain.Services
 @using static Pantrymo.Application.Features.DataSyncFeature
+@using SyncStatusModel= Pantrymo.Domain.Models.SyncStatus
 @implements IDisposable
-@implements INotificationHandler<SyncStatusChanged>
-@inject NotificationDispatcher<SyncStatusChanged> _syncStatusChangedHandler
+@implements INotificationHandler<SyncTypeStatus>
+@inject NotificationDispatcher<SyncTypeStatus> _syncStatusDispatcher
+@inject IMediator _mediator;
 
 <h3>Sync Status</h3>
 
-<ol>
-    @foreach(var text in Updates)
-    {
-        <li>@text</li>
-    }
-</ol>
+<table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Model Type</th>
+      <th scope="col">Last Updated</th>
+      <th scope="col"># Records Synced</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+        @foreach(var row in _syncStatus.OrderBy(p=>p.Key.Name))
+        {
+            <tr>
+                <td>@row.Key.Name</td>
+                <td>@row.Value.LastUpdated.ToShortTimeString()</td>
+                <td>@row.Value.RecordSyncCount</td>
+                @if(row.Value.Succeeded)
+                {
+                    <td>Success</td>
+                }
+                else
+                {
+                    <td> 
+                        @if(row.Value.LastFailure != null) 
+                        {
+                            @row.Value.LastFailure.GetFriendlyString()
+                        }
+                    </td>    
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
 
 @code 
 {
 
-    protected override void OnInitialized()
-    {
-        _syncStatusChangedHandler.Register(this);
+    protected override async Task OnInitializedAsync()
+    {        
+        _syncStatusDispatcher.Register(this);
+
+        var syncStatus = await _mediator.Send(new DataSyncFeature.Query());
+        if (syncStatus == null)
+            return;
+
+        foreach(var status in syncStatus)
+        {
+            var existing = _syncStatus.GetValueOrDefault(status.ModelType);
+            if (existing == null || status.Status.LastUpdated > existing.LastUpdated)
+                _syncStatus[status.ModelType] = status.Status;
+        }
     }
 
     public void Dispose()
     {
-        _syncStatusChangedHandler.Unregister(this);
+        _syncStatusDispatcher.Unregister(this);
     }
 
-    List<string> Updates = new List<string>();
+    Dictionary<Type, SyncStatusModel> _syncStatus = new Dictionary<Type, SyncStatusModel>();
 
-    public async Task Handle(SyncStatusChanged notification, CancellationToken cancellationToken)
+    public async Task Handle(SyncTypeStatus notification, CancellationToken cancellationToken)
     {
         await InvokeAsync(() =>
         {
-            Updates.Add($"Sync {notification.ModelType} Success={notification.Status.Succeeded}");
+            var existing = _syncStatus.GetValueOrDefault(notification.ModelType);
+            if (existing == null || notification.Status.LastUpdated > existing.LastUpdated)
+                _syncStatus[notification.ModelType] = notification.Status;
             StateHasChanged();
         });
     }

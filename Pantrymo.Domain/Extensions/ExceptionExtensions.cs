@@ -35,6 +35,9 @@ namespace Pantrymo.Domain.Extensions
 
         public static string GetFriendlyString(this Exception ex)
         {
+            if (ex == null)
+                return "Unknown error";
+
             var allExceptions = ex.EnumerateAll().ToArray();
 
             var failingMethod = allExceptions
