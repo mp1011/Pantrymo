@@ -3,7 +3,7 @@ using Pantrymo.Domain.Models;
 
 namespace Pantrymo.Application.Models
 {
-    public interface IIngredientText : IWithId
+    public interface IIngredientText : IWithId, IWithLastModifiedDate
     {
         int RecipeId { get; set; }
         string Text { get; set; }

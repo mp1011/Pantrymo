@@ -20,5 +20,8 @@ namespace Pantrymo.Application.Models
         Task Save(params IAuthor[] records);
         Task Save(params ICuisine[] records);
         Task Save(params IComponentNegativeRelation[] records);
+        Task Save(params IRecipe[] records);
+        Task Save(params IRecipeIngredient[] records);
+        Task Save(params IIngredientText[] records);
     }
 }

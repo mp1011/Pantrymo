@@ -3,7 +3,7 @@ using Pantrymo.Domain.Models;
 
 namespace Pantrymo.Application.Models
 {
-    public interface IRecipeIngredient : IWithId
+    public interface IRecipeIngredient : IWithId, IWithLastModifiedDate
     {
         int ComponentId { get; set; }
         bool MultipleChoice { get; set; }

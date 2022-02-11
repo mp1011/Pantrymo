@@ -1,4 +1,5 @@
 ﻿using Pantrymo.Application.Models;
+using Pantrymo.Application.Models.AppModels;
 
 namespace Pantrymo.Application.Services
 {

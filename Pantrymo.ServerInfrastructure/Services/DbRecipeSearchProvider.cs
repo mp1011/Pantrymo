@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Pantrymo.Application.Models;
+using Pantrymo.Application.Models.AppModels;
 using Pantrymo.Application.Services;
 using System.Data;
 

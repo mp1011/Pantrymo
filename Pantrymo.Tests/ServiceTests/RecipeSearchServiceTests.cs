@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Pantrymo.Application.Services;
+using Pantrymo.Application.Models.AppModels;
 using Pantrymo.Domain.Extensions;
 using System.Threading.Tasks;
 

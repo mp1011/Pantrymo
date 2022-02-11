@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Pantrymo.Application.Models;
+using Pantrymo.Domain.Features;
 using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services;
 using Pantrymo.Domain.Services.Sync;
@@ -28,7 +29,8 @@ namespace Pantrymo.Application.Services
 
         protected override void OnSyncStatusChanged(DataTypeSync dataTypeSync)
         {
-            _mediator.Publish(new SyncTypeStatus(dataTypeSync.ModelType, dataTypeSync.SyncStatus));
+            _mediator.Publish(new DataSyncFeature.Notification(
+                new SyncTypeStatus(dataTypeSync.ModelType, dataTypeSync.SyncStatus)));
         }
 
         protected override  async Task CommitLocalChanges()

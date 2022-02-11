@@ -14,6 +14,8 @@ namespace Pantrymo.Application.Models
         public int RecipeId { get; set; }
         public string Text { get; set; }
 
+        public DateTime LastModified { get; set; }
+
         public virtual Recipe Recipe { get; set; }
         public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
 

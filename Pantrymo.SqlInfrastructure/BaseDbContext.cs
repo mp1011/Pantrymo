@@ -112,6 +112,9 @@ namespace Pantrymo.SqlInfrastructure
         public async Task Save(params IAuthor[] records) => await Save(records, Authors);
         public async Task Save(params ICuisine[] records) => await Save(records, Cuisines);
         public async Task Save(params IComponentNegativeRelation[] records) => await Save(records, ComponentNegativeRelations);
+        public async Task Save(params IRecipe[] records) => await Save(records, Recipes);
+        public async Task Save(params IRecipeIngredient[] records) => await Save(records, RecipeIngredients);
+        public async Task Save(params IIngredientText[] records) => await Save(records, IngredientTexts);
 
         private async Task Save<TInterface,TModel>(TInterface[] records, DbSet<TModel> dataSet)
             where TInterface : IWithId, IWithLastModifiedDate

@@ -1,10 +1,12 @@
-﻿using Pantrymo.Application.Models;
+﻿using MediatR;
+using Pantrymo.Application.Models;
+using Pantrymo.Application.Models.AppModels;
 using Pantrymo.Domain.Extensions;
+using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services;
 
 namespace Pantrymo.Application.Services
 {
-    public record RecipeSearchArgs(string[] Ingredients, string[] Cuisines, int From, int To);
 
     public interface IRecipeSearchService
     {
@@ -49,13 +51,15 @@ namespace Pantrymo.Application.Services
         private readonly ISettingsService _settingsService;
         private readonly HttpService _httpService;
         private readonly IRecipeSearchService _fallbackService;
+        private readonly IMediator _mediator;
 
         public RemoteRecipeSearchService(ISettingsService settingsService, HttpService httpService,
-            LocalRecipeSearchService fallbackService)
+            LocalRecipeSearchService fallbackService, IMediator mediator)
         {
             _settingsService = settingsService;
             _httpService = httpService;
             _fallbackService = fallbackService;
+            _mediator = mediator;
         }
 
         public async Task<IRecipe[]> Search(RecipeSearchArgs args)
@@ -67,7 +71,10 @@ namespace Pantrymo.Application.Services
                 $@"{_settingsService.Host}/api/Recipe/Find?ingredients={args.Ingredients.ToCSV()}&traits=none&cuisines={args.Cuisines.ToCSV()}&from={args.From}&to={args.To}");
 
             if (result.Success)
+            {
+                await _mediator.Publish(new DataDownloadedNotification<IRecipe>(result.Data));
                 return result.Data;
+            }
             else
                 return await _fallbackService.Search(args);
         }
