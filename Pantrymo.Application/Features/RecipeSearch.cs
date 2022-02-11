@@ -10,9 +10,9 @@ namespace Pantrymo.Application.Features
 
         public class Handler : IRequestHandler<Query, IRecipe[]>
         {
-            private readonly RecipeSearchService _recipeSearchService;
+            private readonly IRecipeSearchService _recipeSearchService;
 
-            public Handler(RecipeSearchService recipeSearchService)
+            public Handler(IRecipeSearchService recipeSearchService)
             {
                 _recipeSearchService = recipeSearchService;
             }

@@ -40,14 +40,14 @@ namespace Pantrymo.Client
             builder.Services.AddScoped<RemoteDataAccess>();
             builder.Services.AddScoped<LocalDataAccess>();
             builder.Services.AddSingleton<IDataSyncService, PantrymoDataSyncService>();
-            builder.Services.AddSingleton<NetworkCheckService>();
             builder.Services.AddScoped<IFullHierarchyLoader, RemoteFullHierarchyLoader>();
             builder.Services.AddScoped<CategoryTreeBuilder>();
             builder.Services.AddScoped<ILocalStorage, LocalStorage>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
             builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
             builder.Services.AddScoped<IngredientSuggestionService>();
-            builder.Services.AddScoped<RecipeSearchService>();
+            builder.Services.AddScoped<LocalRecipeSearchService>();
+            builder.Services.AddScoped<IRecipeSearchService, RemoteRecipeSearchService>();
             builder.Services.AddScoped<IRecipeSearchProvider, InMemoryRecipeSearchProvider>();
             builder.Services.AddScoped<ISearchService<IComponent>, BasicComponentSearchService>();
             builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>();

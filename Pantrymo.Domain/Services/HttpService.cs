@@ -2,6 +2,7 @@
 
 using Pantrymo.Domain.Extensions;
 using Pantrymo.Domain.Models;
+using System.Net.NetworkInformation;
 
 namespace Pantrymo.Domain.Services
 {
@@ -15,6 +16,7 @@ namespace Pantrymo.Domain.Services
             _jsonSerializer = jsonSerializer;
             _errorHandler = errorHandler;
         }
+        public bool HasInternet() => NetworkInterface.GetIsNetworkAvailable();
 
         public async Task<Result<T>> GetJsonAsync<T>(string url)
                    where T : class, new()

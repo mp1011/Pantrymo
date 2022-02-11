@@ -18,5 +18,10 @@
             else
                 return str.Split(',');
         }
+
+        public static string ToCSV(this IEnumerable<string> list)
+        {
+            return string.Join(',', list.ToArray());
+        }
     }
 }

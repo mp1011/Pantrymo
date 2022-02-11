@@ -121,9 +121,9 @@ namespace Pantrymo.Tests
             return mock;
         }
 
-        public RecipeSearchService CreateRecipeSearchService()
+        public IRecipeSearchService CreateRecipeSearchService()
         {
-            return new RecipeSearchService(
+            return new LocalRecipeSearchService(
                 CreateComponentSearchService(),
                 CreateCuisineSearchService(),
                 CreateRecipeSearchProvider(),

@@ -9,5 +9,11 @@ namespace Pantrymo.Domain.Extensions
         {
             return list.ToDictionary(k => k.Name, v => v);
         }
+
+        public static string ToNameCSV<T>(this IEnumerable<T> items)
+            where T: IWithName
+        {
+            return String.Join(",", items.Select(p => p.Name).ToArray());
+        }
     }
 }

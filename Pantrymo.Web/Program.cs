@@ -25,7 +25,7 @@ builder.Services.AddScoped<IFullHierarchyLoader, FullHierarchyLoader>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<ICacheService, NoCacheService>();
 builder.Services.AddScoped<IngredientSuggestionService>();
-builder.Services.AddScoped<RecipeSearchService>();
+builder.Services.AddScoped<IRecipeSearchService, LocalRecipeSearchService>();
 builder.Services.AddScoped<IRecipeSearchProvider, DbRecipeSearchProvider>();
 builder.Services.AddScoped<ISearchService<IComponent>, BasicComponentSearchService>();
 builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>();

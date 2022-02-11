@@ -46,18 +46,18 @@ namespace Pantrymo.Domain.Services
     {
         private readonly LocalDataAccess _fallbackAPI;
         private readonly RemoteDataAccess _webAPI;
-        private readonly NetworkCheckService _networkCheckService;
+        private readonly HttpService _httpService;
 
-        public RemoteDataAccessWithLocalFallback(LocalDataAccess fallbackAPI, RemoteDataAccess webAPI, NetworkCheckService networkCheckService)
+        public RemoteDataAccessWithLocalFallback(LocalDataAccess fallbackAPI, RemoteDataAccess webAPI, HttpService httpService)
         {
             _fallbackAPI = fallbackAPI;
             _webAPI = webAPI;
-            _networkCheckService = networkCheckService;
+            _httpService = httpService;
         }
 
         private async Task<Result<T[]>> GetData<T>(Task<Result<T[]>> remoteTask, Task<Result<T[]>> fallbackTask)
         {
-            bool hasNetwork = _networkCheckService.HasInternet();
+            bool hasNetwork = _httpService.HasInternet();
             if (!hasNetwork)
                 return await fallbackTask;
 

@@ -16,8 +16,10 @@ namespace Pantrymo.Application.Services
  
         public Task<T[]> Search(params string[] text)
         {
+            text = text.Select(t => t.ToLower()).ToArray();
+
             var result = Query
-                .Where(p => text.Contains(p.Name))
+                .Where(p => text.Contains(p.Name.ToLower()))
                 .ToArray();
 
             return Task.FromResult(result);
