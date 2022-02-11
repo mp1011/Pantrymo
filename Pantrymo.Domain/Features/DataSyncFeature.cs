@@ -1,14 +1,14 @@
 ﻿using MediatR;
-using Pantrymo.Application.Services;
 using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services;
-using Pantrymo.Domain.Services.Sync;
 
-namespace Pantrymo.Application.Features
+namespace Pantrymo.Domain.Features
 {
     public class DataSyncFeature
     {
         public record Query() : IRequest<SyncTypeStatus[]> { }
+
+        public record Notification(SyncTypeStatus TypeStatus) : INotification  { }
 
         public class DataSyncStatusQueryHandler : IRequestHandler<Query, SyncTypeStatus[]>
         {
@@ -25,16 +25,16 @@ namespace Pantrymo.Application.Features
             }
         }
 
-        public class SyncStatusChangedHandler : INotificationHandler<SyncTypeStatus>
+        public class SyncStatusChangedHandler : INotificationHandler<Notification>
         {
-            private readonly NotificationDispatcher<SyncTypeStatus> _dispatcher;
+            private readonly NotificationDispatcher<Notification> _dispatcher;
 
-            public SyncStatusChangedHandler(NotificationDispatcher<SyncTypeStatus> dispatcher)
+            public SyncStatusChangedHandler(NotificationDispatcher<Notification> dispatcher)
             {
                 _dispatcher = dispatcher;
             }
 
-            public async Task Handle(SyncTypeStatus notification, CancellationToken cancellationToken)
+            public async Task Handle(Notification notification, CancellationToken cancellationToken)
             {
                 await _dispatcher.DispatchEvent(notification, cancellationToken);
             }

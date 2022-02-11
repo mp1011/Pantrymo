@@ -1,8 +1,6 @@
-﻿using MediatR;
-
-namespace Pantrymo.Domain.Models
+﻿namespace Pantrymo.Domain.Models
 {
-    public record SyncTypeStatus(Type ModelType, SyncStatus Status) : INotification
+    public record SyncTypeStatus(Type ModelType, SyncStatus Status) 
     {
     }
     

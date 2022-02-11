@@ -2,14 +2,15 @@
 
 @using MediatR
 @using Pantrymo.Application.Features
+@using Pantrymo.Domain.Features
 @using Pantrymo.Domain.Extensions
 @using Pantrymo.Domain.Models
 @using Pantrymo.Domain.Services
-@using static Pantrymo.Application.Features.DataSyncFeature
+@using static Pantrymo.Domain.Features.DataSyncFeature
 @using SyncStatusModel= Pantrymo.Domain.Models.SyncStatus
 @implements IDisposable
-@implements INotificationHandler<SyncTypeStatus>
-@inject NotificationDispatcher<SyncTypeStatus> _syncStatusDispatcher
+@implements INotificationHandler<DataSyncFeature.Notification>
+@inject NotificationDispatcher<DataSyncFeature.Notification> _syncStatusDispatcher
 @inject IMediator _mediator;
 
 <h3>Sync Status</h3>
@@ -75,13 +76,13 @@
 
     Dictionary<Type, SyncStatusModel> _syncStatus = new Dictionary<Type, SyncStatusModel>();
 
-    public async Task Handle(SyncTypeStatus notification, CancellationToken cancellationToken)
+    public async Task Handle(DataSyncFeature.Notification notification, CancellationToken cancellationToken)
     {
         await InvokeAsync(() =>
         {
-            var existing = _syncStatus.GetValueOrDefault(notification.ModelType);
-            if (existing == null || notification.Status.LastUpdated > existing.LastUpdated)
-                _syncStatus[notification.ModelType] = notification.Status;
+            var existing = _syncStatus.GetValueOrDefault(notification.TypeStatus.ModelType);
+            if (existing == null || notification.TypeStatus.Status.LastUpdated > existing.LastUpdated)
+                _syncStatus[notification.TypeStatus.ModelType] = notification.TypeStatus.Status;
             StateHasChanged();
         });
     }
