@@ -1,7 +1,8 @@
 ﻿#nullable disable
-using Pantrymo.Domain.Models;
 
-namespace Pantrymo.Application.Models
+using Pantrymo.Application.Models;
+
+namespace Pantrymo.SqlInfrastructure.Models
 {
     public partial class Author : IAuthor
     {

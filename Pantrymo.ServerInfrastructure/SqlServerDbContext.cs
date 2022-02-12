@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Pantrymo.Application.Models;
 using Pantrymo.Domain.Services;
 using Pantrymo.SqlInfrastructure;
+using Pantrymo.SqlInfrastructure.Models;
 
 namespace Pantrymo.ServerInfrastructure
 {

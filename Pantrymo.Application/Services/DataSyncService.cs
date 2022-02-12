@@ -23,7 +23,10 @@ namespace Pantrymo.Application.Services
                 new DateBasedDataSync<IAlternateComponentName>(_exceptionHandler, _dataContext, _dataAccess),
                 new DateBasedDataSync<IAuthor>(_exceptionHandler, _dataContext, _dataAccess),
                 new DateBasedDataSync<IComponentNegativeRelation>(_exceptionHandler, _dataContext, _dataAccess),
-                new DateBasedDataSync<ICuisine>(_exceptionHandler, _dataContext, _dataAccess),             
+                new DateBasedDataSync<ICuisine>(_exceptionHandler, _dataContext, _dataAccess),   
+                new UpdateExistingOnlyDataSync<IRecipe>(_exceptionHandler, _dataContext, _dataAccess),
+                new RelatedDataSync<IRecipeIngredient, IIngredientText>(_exceptionHandler,_dataContext),
+                new RelatedDataSync<IIngredientText, IRecipe>(_exceptionHandler,_dataContext),
             };
         }
 

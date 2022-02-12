@@ -8,14 +8,10 @@ namespace Pantrymo.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecipeController : ControllerBase
+    public class RecipeController : BaseDataAccessController<IRecipe>
     {
-        private readonly IMediator _mediator;
 
-        public RecipeController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public RecipeController(IMediator mediator) : base(mediator) { }
 
         [Route("Find")]
         [HttpGet]

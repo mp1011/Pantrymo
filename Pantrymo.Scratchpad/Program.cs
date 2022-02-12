@@ -3,6 +3,7 @@
 using Newtonsoft.Json;
 using Pantrymo.Application.Models;
 using Pantrymo.Domain.Services;
+using Pantrymo.SqlInfrastructure.Models;
 
 //var ctx = new SqlServerDbContext(new FakeSettingsService(),new Microsoft.EntityFrameworkCore.DbContextOptions<SqlServerDbContext>());
 

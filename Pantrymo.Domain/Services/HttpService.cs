@@ -2,7 +2,9 @@
 
 using Pantrymo.Domain.Extensions;
 using Pantrymo.Domain.Models;
+using System.Net;
 using System.Net.NetworkInformation;
+using System.Text;
 
 namespace Pantrymo.Domain.Services
 {
@@ -52,6 +54,35 @@ namespace Pantrymo.Domain.Services
                 return Result.Failure<T[]>(jsonResult.Error);
 
             return Result.Success(_jsonSerializer.DeserializeArray<T>(jsonResult.Data));
+        }
+
+        public async Task<Result<T[]>> GetJsonArrayAsync<T>(string url, object body)
+        {
+            var bodyJson = _jsonSerializer.Serialize(body);
+
+            using var webClient = new HttpClient();
+            if (url == null)
+                return Result.Failure<T[]>(new NullReferenceException("url cannot be empty"));
+
+            var result = await webClient.PostAsync(url, new StringContent(bodyJson, Encoding.UTF8, "application/json"))
+                                        .AsResult()
+                                        .HandleError(_errorHandler);
+
+            if (result.Failure)
+                return Result.Failure<T[]>(result.Error);
+
+            if (result.Data.StatusCode != HttpStatusCode.OK)
+                return Result.Failure<T[]>(new Exception($"{url} return HTTP Status {result.Data.StatusCode}"));
+
+            var resultJson = await result.Data.Content
+                .ReadAsStringAsync()
+                .AsResult()
+                .HandleError(_errorHandler);
+
+            if(resultJson.Failure)
+                return Result.Failure<T[]>(resultJson.Error);
+
+            return Result.Success(_jsonSerializer.DeserializeArray<T>(resultJson.Data));
         }
     }
 }

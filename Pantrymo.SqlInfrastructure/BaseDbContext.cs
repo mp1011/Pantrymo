@@ -4,6 +4,7 @@ using Pantrymo.Application.Models;
 using Pantrymo.Domain.Extensions;
 using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services;
+using Pantrymo.SqlInfrastructure.Models;
 using System.Reflection;
 
 namespace Pantrymo.SqlInfrastructure

@@ -1,4 +1,6 @@
-﻿namespace Pantrymo.Application.Models
+﻿using Pantrymo.Application.Models;
+
+namespace Pantrymo.SqlInfrastructure.Models
 {
     public partial class ComponentHierarchy : IComponentHierarchy
     {

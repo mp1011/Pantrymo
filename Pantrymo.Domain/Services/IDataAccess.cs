@@ -3,9 +3,12 @@ using Pantrymo.Domain.Models;
 
 namespace Pantrymo.Domain.Services
 {
+    //reconsider this class, maybe its only to retrieve data for a sync
     public interface IDataAccess
     {
         Task<Result<T[]>> GetRecordsByDate<T>(DateTime from) where T:IWithLastModifiedDate;
+
+        Task<Result<T[]>> GetChangedRecords<T>(RecordUpdateTimestamp[] localTimestamps) where T: IWithLastModifiedDate,IWithId;
     }
 
     public class LocalDataAccess : IDataAccess
@@ -19,6 +22,27 @@ namespace Pantrymo.Domain.Services
 
         public async Task<Result<T[]>> GetRecordsByDate<T>(DateTime from) where T : IWithLastModifiedDate
             => await _dataContext.GetQuery<T>().GetByDateAsync(from);
+
+        public Task<Result<T[]>> GetChangedRecords<T>(RecordUpdateTimestamp[] queryTimestamps)
+            where T: IWithLastModifiedDate,IWithId
+        {
+            var ids = queryTimestamps
+                .Select(x => x.Id)
+                .ToArray();
+
+            var idToDate = queryTimestamps.ToDictionary(k => k.Id, v => v.LastModified);
+
+            var localRecords = _dataContext
+                .GetQuery<T>()
+                .Where(p => ids.Contains(p.Id))
+                .ToArray();
+
+            var result = localRecords
+                .Where(p => p.LastModified > idToDate[p.Id])
+                .ToArray();
+
+            return Task.FromResult(new Result<T[]>(result));
+        }
     }
 
     public class RemoteDataAccess : IDataAccess
@@ -34,11 +58,14 @@ namespace Pantrymo.Domain.Services
 
         public async Task<Result<T[]>> GetRecordsByDate<T>(DateTime from) where T : IWithLastModifiedDate
         {
-            var modelName = typeof(T).Name;
-            if (modelName.StartsWith("I"))
-                modelName = modelName.Substring(1);
-
+            var modelName = typeof(T).GetModelName();
             return await _httpService.GetJsonArrayAsync<T>($"{_settingsService.Host}/api/{modelName}/GetByDate/{from.ToUrlDateString()}");
+        }
+
+        public async Task<Result<T[]>> GetChangedRecords<T>(RecordUpdateTimestamp[] localTimestamps) where T : IWithLastModifiedDate, IWithId
+        {
+            var modelName = typeof(T).GetModelName();
+            return await _httpService.GetJsonArrayAsync<T>($"{_settingsService.Host}/api/{modelName}/GetUpdatedRecords", localTimestamps);
         }
     }
 
@@ -72,5 +99,8 @@ namespace Pantrymo.Domain.Services
 
         public async Task<Result<T[]>> GetRecordsByDate<T>(DateTime from) where T : IWithLastModifiedDate
             => await GetData(_webAPI.GetRecordsByDate<T>(from), _fallbackAPI.GetRecordsByDate<T>(from));
+
+        public async Task<Result<T[]>> GetChangedRecords<T>(RecordUpdateTimestamp[] localTimestamps) where T : IWithLastModifiedDate, IWithId
+            => await _webAPI.GetChangedRecords<T>(localTimestamps);
     }
 }

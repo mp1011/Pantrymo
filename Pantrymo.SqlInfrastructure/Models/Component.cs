@@ -1,6 +1,8 @@
 ﻿#nullable disable
 
-namespace Pantrymo.Application.Models
+using Pantrymo.Application.Models;
+
+namespace Pantrymo.SqlInfrastructure.Models
 {
 
     public partial class Component : IComponentDetail

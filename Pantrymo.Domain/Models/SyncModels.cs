@@ -14,4 +14,6 @@
 
         public SyncStatus UpdateFailure(Exception? e) => new SyncStatus(LastSuccessfulSync, DateTime.Now, e ?? new Exception("unknown erro"), RecordSyncCount);
     }
+
+    public record RecordUpdateTimestamp(int Id, DateTime LastModified);
 }

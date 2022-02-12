@@ -9,6 +9,7 @@ using Pantrymo.ClientInfrastructure.Services;
 using Pantrymo.Domain.Features;
 using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services;
+using Pantrymo.SqlInfrastructure.Models;
 
 namespace Pantrymo.Client
 {

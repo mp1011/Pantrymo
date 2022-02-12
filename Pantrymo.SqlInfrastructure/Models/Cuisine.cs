@@ -1,6 +1,6 @@
-﻿using Pantrymo.Domain.Models;
+﻿using Pantrymo.Application.Models;
 
-namespace Pantrymo.Application.Models
+namespace Pantrymo.SqlInfrastructure.Models
 {
     public partial class Cuisine : ICuisine
     {

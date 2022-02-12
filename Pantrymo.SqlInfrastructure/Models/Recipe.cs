@@ -1,8 +1,8 @@
 ﻿#nullable disable
 
-using Pantrymo.Domain.Models;
+using Pantrymo.Application.Models;
 
-namespace Pantrymo.Application.Models
+namespace Pantrymo.SqlInfrastructure.Models
 {
     public class Recipe : IRecipeDetail
     {

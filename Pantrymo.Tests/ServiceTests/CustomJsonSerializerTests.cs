@@ -3,6 +3,7 @@
 using NUnit.Framework;
 using Pantrymo.Application.Models;
 using Pantrymo.Domain.Services;
+using Pantrymo.SqlInfrastructure.Models;
 using System;
 using System.Text.Json;
 

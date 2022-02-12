@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Pantrymo.Application.Features;
+using Pantrymo.Domain.Features;
 using Pantrymo.Domain.Models;
 
 namespace Pantrymo.Web.Controllers
 {
     public class BaseDataAccessController<T> : ControllerBase
-        where T:IWithLastModifiedDate
+        where T:IWithLastModifiedDate, IWithId
     {
         protected readonly IMediator _mediator;
 
@@ -18,6 +18,11 @@ namespace Pantrymo.Web.Controllers
         [HttpGet()]
         [Route("GetByDate/{dateFrom}")]
         public async Task<T[]> GetByDate(DateTime dateFrom) 
-            => await _mediator.Send(new GetByDateFeature.Query<T>(dateFrom));
+            => await _mediator.Send(new DataAccessFeature.ByDateQuery<T>(dateFrom));
+
+        [HttpPost]
+        [Route("GetUpdatedRecords")]
+        public async Task<T[]> GetUpdatedRecords(RecordUpdateTimestamp[] localTimestamps)
+            => await _mediator.Send(new DataAccessFeature.ChangedRecordsQuery<T>(localTimestamps));
     }
 }

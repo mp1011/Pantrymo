@@ -21,5 +21,11 @@ namespace Pantrymo.Domain.Extensions
                     .OrderBy(p => p.LastModified)
                     .ToArray()).AsResult();
         }
+
+        public static IEnumerable<RecordUpdateTimestamp> GetRecordUpdateTimestamps<T>(this IQueryable<T> query)
+            where T:IWithId,IWithLastModifiedDate
+        {
+            return query.Select(p => new RecordUpdateTimestamp(p.Id, p.LastModified));
+        }
     }
 }
