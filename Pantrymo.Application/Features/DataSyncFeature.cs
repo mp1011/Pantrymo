@@ -7,7 +7,7 @@ namespace Pantrymo.Application.Features
 {
     public class PantrymoDataSyncFeature
     {
-        public class InsertDownloadedRecipes : InsertDownloadedRecords<IRecipe>
+        public class InsertDownloadedRecipes : InsertDownloadedRecords<IRecipeDTO>
         {
             public InsertDownloadedRecipes(IBaseDataContext baseDataContext, IExceptionHandler exceptionHandler) 
                 : base(baseDataContext, exceptionHandler)

@@ -13,6 +13,11 @@ namespace Pantrymo.Application.Models
         IQueryable<IComponentNegativeRelation> ComponentNegativeRelations { get; }
         IQueryable<IRecipe> Recipes { get; }
         IQueryable<IRecipeDetail> RecipesDetail { get; }
+        IQueryable<IRecipeDTO> RecipesDTO { get; }
+        IQueryable<IIngredientText> IngredientTexts { get; }
+        IQueryable<IIngredientTextDetail> IngredientTextDetail { get; }
+        IQueryable<IRecipeIngredient> RecipeIngredients { get; }
+        IQueryable<IRecipeIngredientDetail> RecipeIngredientsDetail { get; }
 
         Task Save(params ISite[] records);
         Task Save(params IComponent[] records);
@@ -21,6 +26,7 @@ namespace Pantrymo.Application.Models
         Task Save(params ICuisine[] records);
         Task Save(params IComponentNegativeRelation[] records);
         Task Save(params IRecipe[] records);
+        Task Save(params IRecipeDTO[] records);
         Task Save(params IRecipeIngredient[] records);
         Task Save(params IIngredientText[] records);
     }

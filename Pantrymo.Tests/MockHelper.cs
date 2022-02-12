@@ -42,7 +42,7 @@ namespace Pantrymo.Tests
             if(!testDataFile.Exists
                 || testDataFile.LastWriteTimeUtc > originalTestDataFile.LastWriteTimeUtc)
             {
-                testDataFile = originalTestDataFile.CopyTo("PantrymoDB.db", overwrite: true);
+                testDataFile = originalTestDataFile.CopyTo(testDataFile.FullName, overwrite: true);
                 testDataFile.LastWriteTimeUtc = originalTestDataFile.LastWriteTimeUtc;
             }
         }
@@ -169,6 +169,9 @@ namespace Pantrymo.Tests
             mock.GetRecordsByDate<IAuthor>(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IAuthor[] { })));
             mock.GetRecordsByDate<IComponentNegativeRelation>(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IComponentNegativeRelation[] { })));
             mock.GetRecordsByDate<ICuisine>(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new ICuisine[] { })));
+
+            mock.GetChangedRecords<IRecipe>(Arg.Any<RecordUpdateTimestamp[]>()).Returns(Task.FromResult(Result.Success(new IRecipe[] { })));
+
 
             mock.GetRecordsByDate<ISite>(Arg.Any<DateTime>())
                 .ReturnsForAnyArgs(c =>

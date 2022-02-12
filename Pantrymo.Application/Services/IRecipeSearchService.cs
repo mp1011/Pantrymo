@@ -10,7 +10,7 @@ namespace Pantrymo.Application.Services
 
     public interface IRecipeSearchService
     {
-        Task<IRecipe[]> Search(RecipeSearchArgs args);
+        Task<IRecipeDTO[]> Search(RecipeSearchArgs args);
     }
 
     public class LocalRecipeSearchService : IRecipeSearchService
@@ -28,7 +28,7 @@ namespace Pantrymo.Application.Services
             _dataContext = dataContext;
         }
 
-        public async Task<IRecipe[]> Search(RecipeSearchArgs args)
+        public async Task<IRecipeDTO[]> Search(RecipeSearchArgs args)
         {
             var components = await _componentSearchService.Search(args.Ingredients);
             var cuisines = await _cuisineSearchService.Search(args.Cuisines);
@@ -41,8 +41,8 @@ namespace Pantrymo.Application.Services
                 .ToArray();
         }
 
-        private IRecipe? GetRecipe(RecipeSearchResult result) 
-            => _dataContext.Recipes.FirstOrDefault(p => p.Id == result.RecipeId);
+        private IRecipeDTO? GetRecipe(RecipeSearchResult result) 
+            => _dataContext.RecipesDTO.FirstOrDefault(p => p.Id == result.RecipeId);
     }
 
 
@@ -62,17 +62,17 @@ namespace Pantrymo.Application.Services
             _mediator = mediator;
         }
 
-        public async Task<IRecipe[]> Search(RecipeSearchArgs args)
+        public async Task<IRecipeDTO[]> Search(RecipeSearchArgs args)
         {
             if (!_httpService.HasInternet())
                 return await _fallbackService.Search(args);
 
-            var result = await _httpService.GetJsonArrayAsync<IRecipe>(
+            var result = await _httpService.GetJsonArrayAsync<IRecipeDTO>(
                 $@"{_settingsService.Host}/api/Recipe/Find?ingredients={args.Ingredients.ToCSV()}&traits=none&cuisines={args.Cuisines.ToCSV()}&from={args.From}&to={args.To}");
 
             if (result.Success)
             {
-                await _mediator.Publish(new DataDownloadedNotification<IRecipe>(result.Data));
+                await _mediator.Publish(new DataDownloadedNotification<IRecipeDTO>(result.Data));
                 return result.Data;
             }
             else

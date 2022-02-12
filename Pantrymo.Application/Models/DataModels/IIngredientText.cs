@@ -9,6 +9,11 @@ namespace Pantrymo.Application.Models
         string Text { get; set; }
     }
 
+    public interface IIngredientTextDTO :IIngredientText
+    {
+        IEnumerable<IRecipeIngredient> RecipeIngredients { get; }
+    }
+
     public interface IIngredientTextDetail : IIngredientText
     {
         IRecipeDetail Recipe { get; }

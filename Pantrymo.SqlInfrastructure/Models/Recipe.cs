@@ -4,7 +4,7 @@ using Pantrymo.Application.Models;
 
 namespace Pantrymo.SqlInfrastructure.Models
 {
-    public class Recipe : IRecipeDetail
+    public class Recipe : IRecipeDetail, IRecipeDTO
     {
         public Recipe()
         {
@@ -24,6 +24,8 @@ namespace Pantrymo.SqlInfrastructure.Models
         public virtual ICollection<IngredientText> IngredientTexts { get; set; }
 
         IEnumerable<IIngredientTextDetail> IRecipeDetail.IngredientTexts => IngredientTexts.Cast<IIngredientTextDetail>();
+
+        IEnumerable<IIngredientTextDTO> IRecipeDTO.IngredientTexts => IngredientTexts.Cast<IIngredientTextDTO>();
 
         IAuthor IRecipeDetail.Author => Author;
 

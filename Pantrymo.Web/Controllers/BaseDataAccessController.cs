@@ -23,6 +23,9 @@ namespace Pantrymo.Web.Controllers
         [HttpPost]
         [Route("GetUpdatedRecords")]
         public async Task<T[]> GetUpdatedRecords(RecordUpdateTimestamp[] localTimestamps)
-            => await _mediator.Send(new DataAccessFeature.ChangedRecordsQuery<T>(localTimestamps));
+        {
+            var result = await _mediator.Send(new DataAccessFeature.ChangedRecordsQuery<T>(localTimestamps));
+            return result;
+        }
     }
 }

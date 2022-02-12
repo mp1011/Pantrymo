@@ -14,6 +14,11 @@ namespace Pantrymo.Application.Models
         public bool IncludeInSearches { get; set; }
     }
 
+    public interface IRecipeDTO : IRecipe
+    {
+        IEnumerable<IIngredientTextDTO> IngredientTexts { get; }
+    }
+
     public interface IRecipeDetail : IRecipe
     {
         IAuthor Author { get; }

@@ -1,4 +1,5 @@
 using MediatR;
+using Newtonsoft.Json;
 using Pantrymo.Application.Features;
 using Pantrymo.Application.Models;
 using Pantrymo.Application.Services;
@@ -11,10 +12,13 @@ using Pantrymo.ServerInfrastructure.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services
 	.AddControllers()
-	.AddNewtonsoftJson();
+	.AddNewtonsoftJson(o =>
+	{
+		o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+		o.SerializerSettings.ContractResolver = new CustomContractResolver(typeof(IRecipe).Assembly);
+	});
 
 builder.Services.AddMediatR(typeof(CategoryTreeFeature), typeof(DataSyncFeature));
 builder.Services.AddDbContext<IDataContext, SqlServerDbContext>();

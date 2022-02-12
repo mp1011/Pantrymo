@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Reflection;
 
 namespace Pantrymo.Domain.Services
@@ -59,6 +60,39 @@ namespace Pantrymo.Domain.Services
             var result = (JsonConvert.DeserializeObject(json, arrayType) as T[]) ?? new T[] { };
             return result;
 
+        }
+    }
+
+
+    public class CustomContractResolver : DefaultContractResolver
+    {
+        private readonly Type[] _interfaceTypes;
+
+        public CustomContractResolver(Assembly modelsAssembly)
+        {
+            _interfaceTypes = modelsAssembly.GetTypes()
+                .Where(p => p.IsInterface)
+                .ToArray();
+        }
+
+        protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+        {
+            if(type.IsInterface)
+                return base.CreateProperties(type, memberSerialization);
+
+            var implementedInterfaces = type
+                .GetInterfaces()
+                .Intersect(_interfaceTypes)
+                .ToArray();
+
+            if(!implementedInterfaces.Any())
+                return base.CreateProperties(type, memberSerialization);
+
+            var typeToUse = implementedInterfaces.FirstOrDefault(p => p.Name.EndsWith("DTO"))
+                ?? implementedInterfaces.FirstOrDefault(p => !p.Name.Contains("Detail"))
+                ?? type;
+
+            return base.CreateProperties(typeToUse, memberSerialization);
         }
     }
 }

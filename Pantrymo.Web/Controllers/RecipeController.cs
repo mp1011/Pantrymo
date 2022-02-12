@@ -15,7 +15,7 @@ namespace Pantrymo.Web.Controllers
 
         [Route("Find")]
         [HttpGet]
-        public async Task<IRecipe[]> Find(string ingredients, string cuisines = "", string traits="", int matchMinimum=1, int from=0, int to=5)
+        public async Task<IRecipeDTO[]> Find(string ingredients, string cuisines = "", string traits="", int matchMinimum=1, int from=0, int to=5)
         {
             return await _mediator.Send(new RecipeSearchFeature.Query(ingredients.FromCSV(), cuisines.FromCSV(), 0, 10));
         }

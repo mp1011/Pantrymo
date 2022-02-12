@@ -6,23 +6,35 @@ namespace Pantrymo.Domain.Extensions
 {
     public static class TaskExtensions
     {
-        public static Task<Result<bool>> AsResult(this Task task)
+        public static Task<Result<bool>> AsResult(this Task task, IExceptionHandler exceptionHandler=null)
         {
             return task.ContinueWith(t =>
             {
                 if (t.IsFaulted)
+                {
+                    if (exceptionHandler != null)
+                        exceptionHandler.Handle(t.Exception);
                     return Result.Failure(t.Exception ?? new Exception("unknown error"), false);
+                }
+                else if (t.IsCanceled)
+                    return Result.Failure<bool>(t.Exception ?? new Exception("Task cancelled"));
                 else
                     return Result.Success(true);
             });
         }
 
-        public static Task<Result<T?>> AsResult<T>(this Task<T?> task)
+        public static Task<Result<T?>> AsResult<T>(this Task<T?> task, IExceptionHandler exceptionHandler = null)
         {
             return task.ContinueWith(t =>
             {
                 if (t.IsFaulted)
+                {
+                    if (exceptionHandler != null)
+                        exceptionHandler.Handle(t.Exception);
                     return Result.Failure<T>(t.Exception ?? new Exception("unknown error"));
+                }
+                else if(t.IsCanceled)
+                    return Result.Failure<T>(t.Exception ?? new Exception("Task cancelled"));
                 else 
                     return Result.Success(t.Result);
             });
@@ -72,8 +84,6 @@ namespace Pantrymo.Domain.Extensions
                     return t.Result;
             });
         }
-
-
         public static Task<T?> DefaultIfFaulted<T>(this Task<T?> task)
         {
             return task.HandleError(ex => default);

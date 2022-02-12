@@ -7,9 +7,9 @@ namespace Pantrymo.Application.Features
 {
     public class RecipeSearchFeature
     {
-        public record Query(string[] Ingredients, string[] Cuisines, int From, int To) : IRequest<IRecipe[]> { }
+        public record Query(string[] Ingredients, string[] Cuisines, int From, int To) : IRequest<IRecipeDTO[]> { }
 
-        public class Handler : IRequestHandler<Query, IRecipe[]>
+        public class Handler : IRequestHandler<Query, IRecipeDTO[]>
         {
             private readonly IRecipeSearchService _recipeSearchService;
 
@@ -18,7 +18,7 @@ namespace Pantrymo.Application.Features
                 _recipeSearchService = recipeSearchService;
             }
 
-            public async Task<IRecipe[]> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<IRecipeDTO[]> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await _recipeSearchService.Search(new RecipeSearchArgs(request.Ingredients, request.Cuisines, request.From, request.To));
             }

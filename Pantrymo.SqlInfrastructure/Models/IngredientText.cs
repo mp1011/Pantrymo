@@ -3,7 +3,7 @@ using Pantrymo.Application.Models;
 
 namespace Pantrymo.SqlInfrastructure.Models
 {
-    public partial class IngredientText : IIngredientTextDetail
+    public partial class IngredientText : IIngredientTextDetail, IIngredientTextDTO
     {
         public IngredientText()
         {
@@ -20,6 +20,8 @@ namespace Pantrymo.SqlInfrastructure.Models
         public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
 
         IEnumerable<IRecipeIngredientDetail> IIngredientTextDetail.RecipeIngredients => RecipeIngredients.Cast<IRecipeIngredientDetail>();
+
+        IEnumerable<IRecipeIngredient> IIngredientTextDTO.RecipeIngredients => RecipeIngredients.Cast<IRecipeIngredient>();
 
         IRecipeDetail IIngredientTextDetail.Recipe => Recipe;
     }

@@ -12,6 +12,6 @@ namespace Pantrymo.Application.Features
         public class GetAlternateComponentNamesByDateHandler : QueryByDateHandler<IAlternateComponentName> { public GetAlternateComponentNamesByDateHandler(IDataContext dataContext) : base(dataContext) { } }
         public class GetComponentNegativeRelationByDateHandler : QueryByDateHandler<IComponentNegativeRelation> { public GetComponentNegativeRelationByDateHandler(IDataContext dataContext) : base(dataContext) { } }
         public class GetCuisineByDateHandler : QueryByDateHandler<ICuisine> { public GetCuisineByDateHandler(IDataContext dataContext) : base(dataContext) { } }
-        public class GetChangedRecipesHandler : QueryChangedRecordsHandler<IRecipe> { public GetChangedRecipesHandler(IDataAccess dataAccess) : base(dataAccess) { } }
+        public class GetChangedRecipesHandler : QueryChangedRecordsHandler<IRecipeDTO> { public GetChangedRecipesHandler(IDataAccess dataAccess) : base(dataAccess) { } }
     }
 }

@@ -26,7 +26,7 @@ namespace Pantrymo.Domain.Extensions
         }
 
         public static string[] GetStackTrace(this Exception e)
-            => e.StackTrace.Split(" at ", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            => (e.StackTrace??"").Split(" at ", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
         public static string GetInternalFailingMethod(this Exception e)
         {

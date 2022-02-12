@@ -77,9 +77,27 @@ namespace Pantrymo.SqlInfrastructure
                                                                 .Include(r => r.IngredientTexts)
                                                                     .ThenInclude(t => t.RecipeIngredients)
                                                                     .ThenInclude(t => t.Component);
+        IQueryable<IRecipeDTO> IDataContext.RecipesDTO => Recipes
+                                                           .Include(r => r.Site)
+                                                           .Include(r => r.IngredientTexts)
+                                                               .ThenInclude(t => t.RecipeIngredients);
+
         IQueryable<ICuisine> IDataContext.Cuisines => Cuisines;
+
+        IQueryable<IIngredientText> IDataContext.IngredientTexts => IngredientTexts;
+
+        public IQueryable<IIngredientTextDetail> IngredientTextDetail => IngredientTexts
+                                                                            .Include(t => t.RecipeIngredients)
+                                                                                .ThenInclude(r => r.Component)
+                                                                            .Include(t => t.Recipe);
+
+        IQueryable<IRecipeIngredient> IDataContext.RecipeIngredients => RecipeIngredients;
+
+        public IQueryable<IRecipeIngredientDetail> RecipeIngredientsDetail => RecipeIngredients
+                                                                                .Include(t => t.Component);
+
         #endregion
-        
+
         #region DB Sets
         public virtual DbSet<AlternateComponentName> AlternateComponentNames { get; set; }
         public virtual DbSet<Author> Authors { get; set; }
@@ -91,7 +109,7 @@ namespace Pantrymo.SqlInfrastructure
         public virtual DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public virtual DbSet<Site> Sites { get; set; }
         public virtual DbSet<FullHierarchy> FullHierarchy { get; set; }
-        public virtual DbSet<RecipeSearchResult> RecipeSearchResults { get; set; }
+        public virtual DbSet<RecipeSearchResult> RecipeSearchResults { get; set; }     
         #endregion
 
         #region Saving
@@ -116,6 +134,21 @@ namespace Pantrymo.SqlInfrastructure
         public async Task Save(params IRecipe[] records) => await Save(records, Recipes);
         public async Task Save(params IRecipeIngredient[] records) => await Save(records, RecipeIngredients);
         public async Task Save(params IIngredientText[] records) => await Save(records, IngredientTexts);
+
+        public async Task Save(IRecipeDTO[] recipes)
+        {
+            foreach (var recipe in recipes)
+            { 
+                var recipeIngredients = recipe.IngredientTexts
+                    .SelectMany(s => s.RecipeIngredients)
+                    .ToArray();
+
+                await Save(recipeIngredients.Cast<IRecipeIngredient>().ToArray());
+                await Save(recipe.IngredientTexts.Cast<IIngredientText>().ToArray());
+                await Save((IRecipe)recipe);
+            }
+            await SaveChangesAsync();
+        }
 
         private async Task Save<TInterface,TModel>(TInterface[] records, DbSet<TModel> dataSet)
             where TInterface : IWithId, IWithLastModifiedDate

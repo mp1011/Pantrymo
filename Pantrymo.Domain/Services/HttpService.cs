@@ -65,8 +65,7 @@ namespace Pantrymo.Domain.Services
                 return Result.Failure<T[]>(new NullReferenceException("url cannot be empty"));
 
             var result = await webClient.PostAsync(url, new StringContent(bodyJson, Encoding.UTF8, "application/json"))
-                                        .AsResult()
-                                        .HandleError(_errorHandler);
+                                        .AsResult(_errorHandler);
 
             if (result.Failure)
                 return Result.Failure<T[]>(result.Error);
@@ -76,9 +75,8 @@ namespace Pantrymo.Domain.Services
 
             var resultJson = await result.Data.Content
                 .ReadAsStringAsync()
-                .AsResult()
-                .HandleError(_errorHandler);
-
+                .AsResult(_errorHandler);
+                
             if(resultJson.Failure)
                 return Result.Failure<T[]>(resultJson.Error);
 
