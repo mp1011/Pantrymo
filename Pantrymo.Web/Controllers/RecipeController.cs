@@ -8,7 +8,7 @@ namespace Pantrymo.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecipeController : BaseDataAccessController<IRecipe>
+    public class RecipeController : BaseDataAccessController<IRecipeDTO>
     {
 
         public RecipeController(IMediator mediator) : base(mediator) { }

@@ -28,7 +28,7 @@
         @foreach(var row in _syncStatus.OrderBy(p=>p.Key.Name))
         {
             <tr>
-                <td>@row.Key.Name</td>
+                <td>@row.Key.GetModelName()</td>
                 <td>@row.Value.LastUpdated.ToShortTimeString()</td>
                 <td>@row.Value.RecordSyncCount</td>
                 @if(row.Value.Succeeded)

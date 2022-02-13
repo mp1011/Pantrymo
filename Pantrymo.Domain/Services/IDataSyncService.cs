@@ -88,12 +88,12 @@ namespace Pantrymo.Domain.Services
             {
                 if(sync.LastSuccessfulSync.TimeSince() > _localDataExpiration)
                 {
-                    await _mediator.Publish(new ShowProgressFeature.Notification($"Started Syncing {sync.ModelType.Name}"));
+                    await _mediator.Publish(new ShowProgressFeature.Notification($"Started Syncing {sync.ModelType.GetModelName()}"));
 
                     bool success = await sync.TrySync().HandleError(_exceptionHandler);
                     
                     await _mediator.Publish(new DataSyncFeature.Notification(new SyncTypeStatus(sync.ModelType, sync.SyncStatus)));
-                    await _mediator.Publish(new ShowProgressFeature.Notification($"Finished Syncing {sync.ModelType.Name}"));
+                    await _mediator.Publish(new ShowProgressFeature.Notification($"Finished Syncing {sync.ModelType.GetModelName()}"));
 
                     if (success)
                         anySucceeded = true;
