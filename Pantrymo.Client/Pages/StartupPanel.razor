@@ -1,0 +1,40 @@
+﻿@page "/StartupPanel"
+
+@using MediatR
+@using Pantrymo.Application.Features
+@using Pantrymo.Client.Pages
+@inject IMediator _mediator;
+
+@if (!Finished)
+{
+    <div class="card text-primary">
+        <div class="card-body">
+            <h3>Loading</h3>
+            <div class="spinner-border" role="status">
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h3>Ready!</h3>
+}
+
+@code 
+{
+    bool Finished = false;
+
+    [Parameter] public EventCallback StartupFinished { get; set; }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if(firstRender)
+        {
+            await _mediator.Send(new StartupFeature.Command());
+
+            Finished = true;
+            await StartupFinished.InvokeAsync();
+            await InvokeAsync(() => StateHasChanged());
+        }
+    }
+}

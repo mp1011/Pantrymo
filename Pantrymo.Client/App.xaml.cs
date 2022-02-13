@@ -5,11 +5,9 @@ namespace Pantrymo.Client
 {
     public partial class App : Microsoft.Maui.Controls.Application
     {
-        public App(IDataSyncService dataSyncService)
+        public App()
         {
             InitializeComponent();
-            dataSyncService.BackgroundSync();
-
             MainPage = new MainPage();
         }
     }

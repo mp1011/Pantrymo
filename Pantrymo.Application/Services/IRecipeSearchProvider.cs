@@ -39,7 +39,6 @@ namespace Pantrymo.Application.Services
                 .Select(p => new RecipeSearchResult { RecipeId = p.Id, RecipeScore = 1.0M })
                 .ToArray();
 
-
             return rankedRecipes.OrderByDescending(r => r.RecipeScore)
                 .Skip(args.From)
                 .Take(args.To)
