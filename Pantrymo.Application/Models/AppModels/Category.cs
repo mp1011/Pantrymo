@@ -163,6 +163,24 @@ namespace Pantrymo.Application.Models.AppModels
                 parent.GetThisAndAllAncestors(ret);
         }
 
+        public Category[] GetThisAndAllDescendants()
+        {
+            List<Category> ret = new List<Category>();
+            GetThisAndAllDescendants(ret);
+            return ret.ToArray();
+        }
+
+        private void GetThisAndAllDescendants(List<Category> ret)
+        {
+            if (ret.Contains(this))
+                return;
+
+            ret.Add(this);
+
+            foreach (var child in SubCategories.Values)
+                child.GetThisAndAllDescendants(ret);
+        }
+
         public bool IsIncompatibleWithAny(IEnumerable<Category> categories)
         {
             foreach (var c in categories)

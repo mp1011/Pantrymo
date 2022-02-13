@@ -13,7 +13,7 @@ namespace Pantrymo.Tests.ServiceTests
         {
         }
 
-        [TestCase("chicken","Italian",0,5)]
+        [TestCase("garlic","Italian",0,5)]
         public async Task CanSearchForRecipes(string ingredientsCsv, string cuisineCsv, int from, int to)
         {
             var service = MockHelper.CreateRecipeSearchService();

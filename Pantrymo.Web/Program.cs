@@ -24,7 +24,7 @@ builder.Services.AddMediatR(typeof(CategoryTreeFeature), typeof(DataSyncFeature)
 builder.Services.AddDbContext<IDataContext, SqlServerDbContext>();
 builder.Services.AddScoped<IBaseDataContext>(sp => sp.GetService<IDataContext>());
 builder.Services.AddScoped<IDataAccess, LocalDataAccess>();
-builder.Services.AddScoped<CategoryTreeBuilder>();
+builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<IFullHierarchyLoader, FullHierarchyLoader>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<ICacheService, NoCacheService>();

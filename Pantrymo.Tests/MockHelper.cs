@@ -57,12 +57,12 @@ namespace Pantrymo.Tests
 
         public IngredientSuggestionService CreateIngredientSuggestionService()
         {
-            return new IngredientSuggestionService(CreateCategoryTreeBuilder());
+            return new IngredientSuggestionService(CreateCategoryService());
         }
 
-        public CategoryTreeBuilder CreateCategoryTreeBuilder()
+        public CategoryService CreateCategoryService()
         {
-            return new CategoryTreeBuilder(CreateDataContext(), CreateFullHierarchyLoader(), CreateCacheService());
+            return new CategoryService(CreateDataContext(), CreateFullHierarchyLoader(), CreateCacheService());
         }
 
         public IDataContext CreateDataContext()
@@ -143,7 +143,7 @@ namespace Pantrymo.Tests
         public IRecipeSearchProvider CreateRecipeSearchProvider()
         {
             if (_testEnvironment == TestEnvironment.Sqlite)
-                return new InMemoryRecipeSearchProvider(CreateDataContext());
+                return new InMemoryRecipeSearchProvider(CreateDataContext(), CreateCategoryService());
             else
                 return new DbRecipeSearchProvider(CreateDataContext() as SqlServerDbContext);
         }
@@ -170,7 +170,7 @@ namespace Pantrymo.Tests
             mock.GetRecordsByDate<IComponentNegativeRelation>(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new IComponentNegativeRelation[] { })));
             mock.GetRecordsByDate<ICuisine>(Arg.Any<DateTime>()).Returns(Task.FromResult(Result.Success(new ICuisine[] { })));
 
-            mock.GetChangedRecords<IRecipe>(Arg.Any<RecordUpdateTimestamp[]>()).Returns(Task.FromResult(Result.Success(new IRecipe[] { })));
+            mock.GetChangedRecords<IRecipeDTO>(Arg.Any<RecordUpdateTimestamp[]>()).Returns(Task.FromResult(Result.Success(new IRecipeDTO[] { })));
 
 
             mock.GetRecordsByDate<ISite>(Arg.Any<DateTime>())

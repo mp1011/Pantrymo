@@ -10,9 +10,9 @@ namespace Pantrymo.Application.Features
 
         public class Handler : IRequestHandler<Query, Category>
         {
-            private readonly CategoryTreeBuilder _categoryTreeBuilder;
+            private readonly CategoryService _categoryTreeBuilder;
 
-            public Handler(CategoryTreeBuilder categoryTreeLoader)
+            public Handler(CategoryService categoryTreeLoader)
             {
                 _categoryTreeBuilder = categoryTreeLoader;
             }

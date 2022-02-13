@@ -7,17 +7,45 @@ using Pantrymo.Domain.Services;
 namespace Pantrymo.Application.Services
 {
 
-    public class CategoryTreeBuilder
+    public class CategoryService
     {
         private readonly IDataContext _dbContext;
         private readonly IFullHierarchyLoader _fullHierarchyLoader;
         private readonly ICacheService _cache;
 
-        public CategoryTreeBuilder(IDataContext dbContext, IFullHierarchyLoader fullHierarchyLoader, ICacheService cache)
+        public CategoryService(IDataContext dbContext, IFullHierarchyLoader fullHierarchyLoader, ICacheService cache)
         {
             _dbContext = dbContext;
             _fullHierarchyLoader = fullHierarchyLoader;
             _cache = cache;
+        }
+
+        public async Task<Category[]> GetCategories(IComponent[] components)
+        {
+            var tree = await GetOrBuildCategoryTree();
+            return components
+                .Select(c => tree.SubCategories[c.Name])
+                .ToArray();
+        }
+
+        public async Task<Category[]> GetCategoriesWithDescendants(IComponent[] components)
+        {
+            var categories = await GetCategories(components);
+
+            return categories
+                .SelectMany(c => c.GetThisAndAllDescendants())
+                .ToArray();
+        }
+
+        public IComponent[] GetComponents(Category[] categories)
+        {
+            var names = categories
+                .Select(c => c.Name)
+                .ToArray();
+
+            return _dbContext.Components
+                .Where(c => names.Contains(c.Name))
+                .ToArray();
         }
 
         public async Task<Category> GetOrBuildCategoryTree()

@@ -42,7 +42,7 @@ namespace Pantrymo.Client
             builder.Services.AddScoped<LocalDataAccess>();
             builder.Services.AddSingleton<IDataSyncService, PantrymoDataSyncService>();
             builder.Services.AddScoped<IFullHierarchyLoader, RemoteFullHierarchyLoader>();
-            builder.Services.AddScoped<CategoryTreeBuilder>();
+            builder.Services.AddScoped<CategoryService>();
             builder.Services.AddScoped<ILocalStorage, LocalStorage>();
             builder.Services.AddSingleton<ISettingsService, SettingsService>();
             builder.Services.AddSingleton<ICacheService, MemoryCacheService>();

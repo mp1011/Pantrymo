@@ -2,9 +2,9 @@
 {
     public class IngredientSuggestionService
     {
-        private readonly CategoryTreeBuilder _categoryTreeBuilder;
+        private readonly CategoryService _categoryTreeBuilder;
 
-        public IngredientSuggestionService(CategoryTreeBuilder categoryTreeBuilder)
+        public IngredientSuggestionService(CategoryService categoryTreeBuilder)
         {
             _categoryTreeBuilder = categoryTreeBuilder;
         }
