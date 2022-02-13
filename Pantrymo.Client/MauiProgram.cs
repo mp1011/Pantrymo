@@ -1,6 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Components.WebView.Maui;
 using Microsoft.Extensions.Configuration;
+using NLog;
+using NLog.Config;
+using NLog.Extensions.Logging;
+using NLog.Targets;
 using Pantrymo.Application.Features;
 using Pantrymo.Application.Models;
 using Pantrymo.Application.Services;
@@ -31,7 +35,8 @@ namespace Pantrymo.Client
                 var path = new FileInfo(typeof(MauiApp).Assembly.Location).Directory;
                 config.AddJsonFile($@"{path}\appsettings.json", optional: false, false);
             });
-            
+
+
 
             builder.Services.AddBlazorWebView();
             builder.Services.AddMediatR(typeof(CategoryTreeFeature), typeof(DataSyncFeature));
@@ -52,9 +57,26 @@ namespace Pantrymo.Client
             builder.Services.AddScoped<IRecipeSearchProvider, InMemoryRecipeSearchProvider>();
             builder.Services.AddScoped<ISearchService<IComponent>, BasicComponentSearchService>();
             builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>();
-            builder.Services.AddScoped<IExceptionHandler, DebugLogExceptionHandler>();
+            builder.Services.AddScoped<IExceptionHandler, NLogExceptionHandler>();
             builder.Services.AddScoped<IObjectMapper, ReflectionObjectMapper>();
             builder.Services.AddSingleton<NotificationDispatcher<DataSyncFeature.Notification>>();
+            builder.Services.AddScoped<ILogger>(sp =>
+            {        
+                if(LogManager.Configuration == null)
+                {
+                    var settings = sp.GetService<ISettingsService>();
+                    var logConfig = new LoggingConfiguration();
+                    var fileTarget = new FileTarget { FileName = $"{settings.LocalDataFolder}\\log.txt" };
+                    logConfig.AddRuleForOneLevel(LogLevel.Error, fileTarget);
+                    LogManager.Configuration = logConfig;
+                }
+
+                var logger = LogManager.GetCurrentClassLogger();
+                return logger;
+            });
+
+           
+           
             
             builder.Services.AddScoped<HttpService>();
             builder.Services.AddSingleton(_ => new CustomJsonSerializer(typeof(IRecipe).Assembly, typeof(Recipe).Assembly));

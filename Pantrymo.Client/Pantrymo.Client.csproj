@@ -62,6 +62,8 @@
 	<ItemGroup>
 	  <PackageReference Include="MediatR" Version="10.0.1" />
 	  <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+	  <PackageReference Include="NLog" Version="4.7.13" />
+	  <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
 	</ItemGroup>
 
 	<ItemGroup>
