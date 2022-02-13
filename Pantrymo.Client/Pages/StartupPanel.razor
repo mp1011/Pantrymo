@@ -3,6 +3,13 @@
 @using MediatR
 @using Pantrymo.Application.Features
 @using Pantrymo.Client.Pages
+@using Pantrymo.Domain.Features
+@using Pantrymo.Domain.Services
+@using System.Collections.Concurrent
+
+@implements IDisposable
+@implements INotificationHandler<ShowProgressFeature.Notification>
+@inject NotificationDispatcher<ShowProgressFeature.Notification> _progressUpdateDispatcher
 @inject IMediator _mediator;
 
 @if (!Finished)
@@ -12,6 +19,12 @@
             <h3>Loading</h3>
             <div class="spinner-border" role="status">
             </div>
+            <ul>
+                @foreach(var msg in LogMessages)
+                {
+                    <li>@msg</li>
+                }
+            </ul>
         </div>
     </div>
 }
@@ -23,6 +36,7 @@ else
 @code 
 {
     bool Finished = false;
+    ConcurrentQueue<string> LogMessages = new ConcurrentQueue<string>();
 
     [Parameter] public EventCallback StartupFinished { get; set; }
 
@@ -37,4 +51,28 @@ else
             await InvokeAsync(() => StateHasChanged());
         }
     }
+
+    protected override void OnInitialized()
+    {        
+        _progressUpdateDispatcher.Register(this);
+    }
+
+    public void Dispose()
+    {
+        _progressUpdateDispatcher.Unregister(this);
+    }
+
+    public async Task Handle(ShowProgressFeature.Notification notification, CancellationToken cancellationToken)
+    {
+        await InvokeAsync(() =>
+        {
+            LogMessages.Enqueue(notification.Message);
+            StateHasChanged();
+        });
+    }
+
+
+
+
+
 }

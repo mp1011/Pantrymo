@@ -62,7 +62,7 @@ namespace Pantrymo.Tests
 
         public CategoryService CreateCategoryService()
         {
-            return new CategoryService(CreateDataContext(), CreateFullHierarchyLoader(), CreateCacheService());
+            return new CategoryService(CreateDataContext(), CreateFullHierarchyLoader(), CreateCacheService(), CreateMediator());
         }
 
         public IDataContext CreateDataContext()

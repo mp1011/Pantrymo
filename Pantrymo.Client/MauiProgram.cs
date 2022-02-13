@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.WebView.Maui;
 using Microsoft.Extensions.Configuration;
 using NLog;
 using NLog.Config;
-using NLog.Extensions.Logging;
 using NLog.Targets;
 using Pantrymo.Application.Features;
 using Pantrymo.Application.Models;
@@ -60,6 +59,7 @@ namespace Pantrymo.Client
             builder.Services.AddScoped<IExceptionHandler, NLogExceptionHandler>();
             builder.Services.AddScoped<IObjectMapper, ReflectionObjectMapper>();
             builder.Services.AddSingleton<NotificationDispatcher<DataSyncFeature.Notification>>();
+            builder.Services.AddSingleton<NotificationDispatcher<ShowProgressFeature.Notification>>();
             builder.Services.AddScoped<ILogger>(sp =>
             {        
                 if(LogManager.Configuration == null)

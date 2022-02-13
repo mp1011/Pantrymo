@@ -2,12 +2,21 @@
 
 using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services;
+using System.Runtime.ExceptionServices;
 
 namespace Pantrymo.Domain.Extensions
 {
     public static class ExceptionExtensions
     {
         private const string NamespaceKeyword = "Pantrymo";
+
+        public static void Rethrow(this Exception exception)
+        {
+            if (exception == null)
+                return;
+
+            ExceptionDispatchInfo.Capture(exception).Throw();
+        }
 
         public static IEnumerable<Exception> EnumerateAll(this Exception ex)           
         {

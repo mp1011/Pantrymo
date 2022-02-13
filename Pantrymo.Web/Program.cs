@@ -36,6 +36,8 @@ builder.Services.AddScoped<ISearchService<ICuisine>, BasicCuisineSearchService>(
 builder.Services.AddScoped<IExceptionHandler, DebugLogExceptionHandler>();
 builder.Services.AddScoped<IObjectMapper, ReflectionObjectMapper>();
 builder.Services.AddScoped<NotificationDispatcher<DataSyncFeature.Notification>>();
+builder.Services.AddScoped<NotificationDispatcher<ShowProgressFeature.Notification>>();
+
 builder.Services.AddSingleton<IDataSyncService, EmptyDataSyncService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

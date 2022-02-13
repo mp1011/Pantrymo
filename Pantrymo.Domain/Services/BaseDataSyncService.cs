@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Pantrymo.Domain.Extensions;
+using Pantrymo.Domain.Features;
 using Pantrymo.Domain.Models;
 using Pantrymo.Domain.Services.Sync;
 
@@ -87,8 +88,12 @@ namespace Pantrymo.Domain.Services
             {
                 if(sync.LastSuccessfulSync.TimeSince() > _localDataExpiration)
                 {
+                    await _mediator.Publish(new ShowProgressFeature.Notification($"Started Syncing {sync.ModelType.Name}"));
+
                     bool success = await sync.TrySync().HandleError(_exceptionHandler);
-                    OnSyncStatusChanged(sync);
+                    
+                    await _mediator.Publish(new DataSyncFeature.Notification(new SyncTypeStatus(sync.ModelType, sync.SyncStatus)));
+                    await _mediator.Publish(new ShowProgressFeature.Notification($"Finished Syncing {sync.ModelType.Name}"));
 
                     if (success)
                         anySucceeded = true;
@@ -106,8 +111,6 @@ namespace Pantrymo.Domain.Services
 
             return !anyFailed;
         }
-
-        protected abstract void OnSyncStatusChanged(DataTypeSync dataTypeSync);
 
         protected abstract Task CommitLocalChanges();
     }

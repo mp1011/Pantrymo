@@ -3,6 +3,8 @@ using Pantrymo.Domain.Extensions;
 using Pantrymo.Application.Models;
 using Pantrymo.Application.Models.AppModels;
 using Pantrymo.Domain.Services;
+using MediatR;
+using Pantrymo.Domain.Features;
 
 namespace Pantrymo.Application.Services
 {
@@ -12,12 +14,14 @@ namespace Pantrymo.Application.Services
         private readonly IDataContext _dbContext;
         private readonly IFullHierarchyLoader _fullHierarchyLoader;
         private readonly ICacheService _cache;
+        private readonly IMediator _mediator;
 
-        public CategoryService(IDataContext dbContext, IFullHierarchyLoader fullHierarchyLoader, ICacheService cache)
+        public CategoryService(IDataContext dbContext, IFullHierarchyLoader fullHierarchyLoader, ICacheService cache, IMediator mediator)
         {
             _dbContext = dbContext;
             _fullHierarchyLoader = fullHierarchyLoader;
             _cache = cache;
+            _mediator = mediator;
         }
 
         public async Task<Category[]> GetCategories(IComponent[] components)
@@ -63,6 +67,8 @@ namespace Pantrymo.Application.Services
 
         public async Task<Category> BuildCategoryTree()
         {
+            await _mediator.Publish(new ShowProgressFeature.Notification($"Started building category tree"));
+
             var hierarchy = await _fullHierarchyLoader.GetFullHierarchy();
            
             if (hierarchy.Any(p => p.Level7 != null))
@@ -76,6 +82,8 @@ namespace Pantrymo.Application.Services
 
             foreach (var cat in master.SubCategories)
                 cat.Value.InheritNegativeCategories();
+
+            await _mediator.Publish(new ShowProgressFeature.Notification($"Finished building category tree"));
 
             return master;
         }

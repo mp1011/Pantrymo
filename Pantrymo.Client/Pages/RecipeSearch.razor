@@ -5,38 +5,73 @@
 @using Pantrymo.Application.Features
 @using Pantrymo.Application.Models
 @using Pantrymo.Application.Models.AppModels
+@using Pantrymo.Domain.Extensions
+@using Pantrymo.Domain.Models
 
 
 @inject IMediator _mediator;
 
 <input id="IngredientTextInput" @bind="IngredientText" @bind:event="oninput" @onkeyup="IngredientText_OnKeyUp" />
-<ul class="list-group">
-    @foreach(var ingredient in _ingredientSuggestions)
-    {
-        <li class="list-group-item list-group-item-light list-group-item-action" 
-            data-value=@ingredient
-            @onclick="()=> IngredientSuggestionClick(ingredient)">@ingredient</li>
-    }
-</ul>
+<div>
+    <ul class="list-group" style="display:inline-block; padding-left:1rem; width:20rem">
+        @foreach(var ingredient in _ingredientSuggestions)
+        {
+            <li class="list-group-item list-group-item-light list-group-item-action @(ingredient == IngredientText ? "active":"")" 
+                data-value=@ingredient
+                @onclick="()=> IngredientSuggestionClick(ingredient)">@ingredient</li>
+        }
+    </ul>
+</div>
 
-<ul>
-    @foreach(var result in _searchResults)
-    {
-        <li>@result.Title</li>
-    }
-</ul>
+@if(IsFindingRecipes)
+{
+    <h3>Finding recipes...</h3>
+    <div class="spinner-border" role="status" />
+}
+else 
+{
+    <ul>
+        @foreach(var result in _searchResults)
+        {
+            <li>@result.Title</li>
+        }
+    </ul>
+}
 
 @code
 {
-    private CancellationTokenSource _tokenSource = new CancellationTokenSource();    
+    private CancellationTokenSource _tokenSource = null;
     string IngredientText { get; set; }
 
     private string[] _ingredientSuggestions = new string[] { };
     private IRecipe[] _searchResults = new IRecipe[] { };
+    private bool IsFindingRecipes { get; set; }
 
     public async void IngredientText_OnKeyUp(KeyboardEventArgs args)
     {
-        await SuggestIngredients();
+        if (args.Key == KeyboardEventKey.ArrowUp.ToString())
+            await ChangeSelection(-1);
+        else if (args.Key == KeyboardEventKey.ArrowDown.ToString())
+            await ChangeSelection(1);
+        else if (args.Key == KeyboardEventKey.Enter.ToString())
+            await DoRecipeSearch();
+        else
+            await SuggestIngredients();           
+    }
+
+    private async Task ChangeSelection(int direction)
+    {
+        var index = Array.IndexOf(_ingredientSuggestions, IngredientText);
+        if (index == -1)
+            index = 0;
+        else
+            index = (index + direction).Wrap(_ingredientSuggestions.Length);
+
+        if(index < _ingredientSuggestions.Length)
+        {
+            IngredientText = _ingredientSuggestions[index];
+            await DoRecipeSearch();
+        }
     }
 
     public async void IngredientSuggestionClick(string ingredient)
@@ -54,28 +89,33 @@
 
     private async Task DoRecipeSearch()
     {
+        IsFindingRecipes = true;
         if(_tokenSource != null)
             _tokenSource.Cancel();
 
-        _tokenSource = new CancellationTokenSource();
-        await DoRecipeSearch(_tokenSource.Token);
-        _tokenSource = null;
+        var thisTokenSource =  new CancellationTokenSource();
+        _tokenSource = thisTokenSource;
+
+        var results = await DoRecipeSearch(_tokenSource.Token);
+        if (results != null && !thisTokenSource.IsCancellationRequested)
+        {
+            _searchResults = results;
+            IsFindingRecipes = false;
+        }
+        _tokenSource = null;                
+        StateHasChanged();
     }
 
-    private async Task DoRecipeSearch(CancellationToken cancellationToken)
+    private async Task<IRecipe[]?> DoRecipeSearch(CancellationToken cancellationToken)
     {
-        System.Diagnostics.Debug.WriteLine("DRS BEGIN");
-        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken).IgnoreCancellation();
         if (cancellationToken.IsCancellationRequested)
-            return;
+            return null;
 
-        System.Diagnostics.Debug.WriteLine("DRS SEND");
         var results = await _mediator.Send(new RecipeSearchFeature.Query(new string[]{IngredientText}, new string[]{"Italian"},0,10));
         if (cancellationToken.IsCancellationRequested)
-            return;
-            
-        System.Diagnostics.Debug.WriteLine("DRS END");
-        _searchResults = results;
-        StateHasChanged(); 
+            return null;
+
+        return results;
     }
 }

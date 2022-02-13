@@ -28,12 +28,6 @@ namespace Pantrymo.Application.Services
             };
         }
 
-        protected override void OnSyncStatusChanged(DataTypeSync dataTypeSync)
-        {
-            _mediator.Publish(new DataSyncFeature.Notification(
-                new SyncTypeStatus(dataTypeSync.ModelType, dataTypeSync.SyncStatus)));
-        }
-
         protected override  async Task CommitLocalChanges()
         {
             await _dataContext.SaveChangesAsync();

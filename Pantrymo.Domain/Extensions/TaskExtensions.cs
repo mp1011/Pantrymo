@@ -6,6 +6,14 @@ namespace Pantrymo.Domain.Extensions
 {
     public static class TaskExtensions
     {
+        public static Task IgnoreCancellation(this Task t)
+        {
+            return t.ContinueWith(t =>
+            {
+                if(t.IsFaulted)
+                    t.Exception.Rethrow();               
+            });
+        }
         public static Task<Result<bool>> AsResult(this Task task, IExceptionHandler exceptionHandler=null)
         {
             return task.ContinueWith(t =>
